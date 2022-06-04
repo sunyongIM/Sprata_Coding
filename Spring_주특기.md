@@ -7,6 +7,8 @@
 >  
 >
 > 
+>
+> [[스파르타코딩클럽\] 웹개발의 봄, Spring - 5주차 (notion.so)](https://www.notion.so/Spring-5-e1b5ceb6ede84d70b3366f03207e2e8c)
 
 
 
@@ -80,7 +82,7 @@ public class CourseController {
 }
 ```
 
-> @GetMapping
+> `@GetMapping`
 >
 > 브라우저에서 주소를 치는 행위를 GET 방식으로 정보를 요청한다고 합니다. 스프링 주소(http://localhost:8080) 뒤의 주소가 /courses 일 경우, getCourse 메소드를 실행함을 나타냅니다.
 
@@ -135,22 +137,31 @@ public class CourseController {
 
 
 
-### H2
+**H2**
 
 > In-memory DB의 대표 주자인 H2
 > 인메모리 DB란 서버가 작동하는 동안에만 내용을 저장하고, 서버가 작동을 멈추면 데이터가 모두 삭제되는 데이터베이스를 말합니다.
 
 RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
 
+
+
 ### SQL
 
-데이터를 읽고, 저장하고, 변경하고, 삭제하는 구체적인 문법이다
+> SQL(Structured Query Language)
+>
+> RDBMS의 고도화된 엑셀 파일 하나가 "데이터베이스"라면,
+> 엑셀 시트 하나는 "테이블"이라고 부르고,
+> 엑셀 행 하나는 "데이터"라고 부릅니다.
+
+데이터베이스에서 데이터를 읽고, 저장하고, 변경하고, 삭제하는 구체적인 문법이다
 
 
 
 ## Model
 
 > DB를 사용하기 위한 영역
+> `@Entity` 를 선언하여 클래스를 바로 테이블로 만들어 사용하고, 각종 기능들을 구현한다
 >
 > 스프링은 자바로 작동하고, 데이터베이스는 SQL로 작동한다
 > 한국어와 영어 사이에 번역기가 필요하듯, 스프링과 DB에도 번역기가 필요하다
@@ -165,6 +176,33 @@ RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
 > JPA(Java Persistence API)는 스프링을 위해 만들어졌다
 > **Java로 코드를 작성하면 SQL로 번역**해줄 뿐만 아니라, **기본적인 기능이 거의 완벽하게 들어있다**
 
+JPA 사용 안했을 때
+
+```java
+String query = "SELECT * FROM EMPLOYEE WHERE ID = ?";
+Employee employee = jdbcTemplate.queryForObject(
+  query, new Object[] { id }, new EmployeeRowMapper());
+```
+
+
+
+JPA 설정
+
+```java
+implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+```
+
+
+
+JPA 사용 했을 때
+
+> query없이 사용가능, 자동으로 SQL로 변환해준다
+
+```java
+repository.save(new Customer("Jack", "Bauer"));
+repository.save(new Customer("Chloe", "O'Brian"));
+```
+
 
 
 ### Repository
@@ -172,6 +210,14 @@ RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
 > 클래스의 한 역할 중 하나이고, 데이터에 접근할 때 사용하는 하나의 도구라고 생각하면 된다
 
  JPA를 작동시키는 매개체
+
+
+
+![JPA_Domain_Repository](md-images/JPA_Domain_Repository.png)
+
+- 자바로 DB를 사용하도록 도와주는 녀석이 JPA 라고 말씀드렸습니다.
+- 그럼 DB를 이용하는데 핵심이었던 "테이블"과 "SQL"과 동일한 개념의 자바 용어가 있겠죠?
+- **"테이블"은 Domain, "SQL"은 Repository** 입니다.
 
 
 
@@ -193,6 +239,9 @@ RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
 
 ### DTO
 
+> **DTO [ Data Transfer Object ]**
+> VO [ Value Object ] 로 정의하여 사용했던 클래스와 같다
+>
 > 현업에서는 데이터를 주고받을 때, DTO를 반드시 이용합니다. 왜 그러한지 이유와 방법을 배웁니다.
 
 
@@ -205,9 +254,341 @@ RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
 
 
 
+# JPA
 
 
 
+```java
+@NoArgsConstructor // 기본생성자를 대신 생성해줍니다.
+@Entity // 테이블임을 나타냅니다.
+public class Course {
+
+    @Id // ID 값, Primary Key로 사용하겠다는 뜻입니다.
+    @GeneratedValue(strategy = GenerationType.AUTO) // 자동 증가 명령입니다.
+    private Long id;
+
+    @Column(nullable = false) // 컬럼 값이고 반드시 값이 존재해야 함을 나타냅니다.
+    private String title;
+
+    @Column(nullable = false)
+    private String tutor;
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public String getTutor() {
+        return this.tutor;
+    }
+
+    public Course(String title, String tutor) {
+        this.title = title;
+        this.tutor = tutor;
+    }
+}
+```
+
+JPA를 사용하지 않는다면 아래처럼 입력해야한다
+
+```sql
+CREATE TABLE IF NOT EXISTS Course (
+    id bigint(5) NOT NULL AUTO_INCREMENT,
+    title varchar(255) NOT NULL,
+    tutor varchar(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+```
+
+
+
+### 인터페이스
+
+> JPA는 Repository를 통해서만 사용할 수 있습니다.
+>
+> 인터페이스는 클래스에서 멤버가 빠진, 메소드 모음집이라고 보시면 됩니다.
+
+```java
+public interface CourseRepository extends JpaRepository<Course, Long> {
+}	// (Primary Key가 Long 타입인) Course 클래스에 대한 Repository를 만든다
+```
+
+
+
+```java
+@Bean
+    public CommandLineRunner demo(BoardRepository repository) {
+        return (args) -> {
+
+            Board board1 = new Board();
+            repository.save(board1);
+            // BoardRepository에서 JpaRepository<Board, Long>를 상속했기 때문에
+            // repository관련 메소드를 사용할 수 있다
+            List<Board> boardList = repository.findAll();
+
+            for (int i=0; i<boardList.size();i++){
+                Board b = boardList.get(i);
+                System.out.println(b.getTitle());
+            }
+        };
+    }
+```
+
+
+
+#### 상속의 개념
+
+> `public interface CourseRepository extends JpaRepository<Course, Long>{}`
+> 에서 사용한 **extends는 클래스의 상속을 선언**할 때 사용한다
+> 상속받은 클래스는 상속한 클래스의 **멤버변수, 메소드를 가지고 있다**
+
+
+
+```java
+// 상속 예시
+class Person {
+	private String name;
+	private String getName() {
+		return this.name;
+	}
+}
+
+class Tutor extends Person {
+	private String address;
+	// Person 클래스를 상속했기 때문에,
+	// name 멤버변수와 getName() 메소드를 가지고 있습니다.
+}
+
+```
+
+
+
+
+
+## 생성일자, 수정일자
+
+> 대부분의 DB는 기본으로 "생성일자"와 "수정일자"를 필드로 가지고 있다
+>
+> 생성일자와 수정일자를 다루는 클래스를 생성하고, 그것을 상속받아 사용하게 만든다
+
+
+
+# CRUD
+
+> 정보관리의 기본 기능
+>
+> → 생성 (Create)
+> → 조회 (Read)
+> → 변경 (Update)
+> → 삭제 (Delete)
+
+
+
+## 데이터 저장 (Create) & 조회 (Read)
+
+1. Application단에서 `JpaRepository`를 상속받은 BoardRepository 인터페이스 클래스의
+   JPA 메서드를 사용하여 저장 및 조회 기능을 구현
+
+> JpaRepository를 상속받은 repository는 쿼리를 보내주는 클래스라고 생각하면 된다
+
+```java
+// 데이터 저장하기
+repository.save(new Course("프론트엔드의 꽃, 리액트", "임민영"));
+
+// 데이터 전부 조회하기
+List<Course> courseList = repository.findAll();
+for (int i=0; i<courseList.size(); i++) {
+    Course course = courseList.get(i);
+    System.out.println(course.getId());
+    System.out.println(course.getTitle());
+    System.out.println(course.getTutor());
+}
+
+// 데이터 하나 조회하기
+// 데이터가 없을 수 있으므로 .orElseThrow로 예외를 처리해 줘야한다
+Course course = repository.findById(1L).orElseThrow(
+        () -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다.")
+);
+```
+
+
+
+### Service의 개념
+
+> 스프링의 구조는 3가지 영역으로 나눌 수 있습니다.
+>
+> 1. Controller : 가장 바깥 부분, 요청/응답을 처리함.
+>
+>    → 2주차 후반부에 배울 녀석
+>
+> 2. Service : 중간 부분, 실제 중요한 작동이 많이 일어나는 부분
+>
+>    → 지금 배울 녀석
+>
+> 3. Repo : 가장 안쪽 부분, DB와 맞닿아 있음.
+>
+>    → 여태 배운 녀석 (Repository, Entity)
+
+Update 는 Service 부분에 작성해야 한다
+
+
+
+## 데이터 변경 (Update)
+
+1. Board 클래스에 update메서드를 추가한다
+2. Service클래스에서 Board클래스의 update를 이용하여 update JPA를 생성한다
+3. Application단에서 Service클래스의 update메서드를 호출하여 데이터 수정 기능을 구현한다
+
+```java
+@Service // 스프링에게 이 클래스가 서비스임을 명시
+public class BoardService {
+
+    // final: 서비스에게 꼭 필요한 것이다 (생성자에서 사용할 수 있음)
+    private final BoardRepository boardRepository;
+
+    // 생성자를 통해, Service 클래스를 만들 대 꼭 Repository를 넣어주도록 스프링에게 알려줌
+    public BoardService(BoardRepository boardRepository){
+        this.boardRepository = boardRepository;
+    }
+
+    @Transactional // SQL 쿼리가 일어나야 함을 스프링에게 알려줌
+    public Long update(Long id, Board board){
+        Board board1 = boardRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 아이디가 존재하지 않습니다")
+        );
+        board1.update(board);
+        return board1.getId();
+    }
+}
+```
+
+```java
+ // 업데이트
+            Board board2 = new Board("제목2", "콘텐츠2", "작성자2");
+            boardService.update(1L, board2);
+```
+
+
+
+## 데이터 삭제 (Delete)
+
+1. Application단에서 `JpaRepository`를 상속받은 BoardRepository 인터페이스 클래스의
+   JPA 메서드를 사용하여 삭제 기능을 구현
+
+
+
+# Lombok, DTO
+
+
+
+### Lombok
+
+> 어노테이션을 통해 코드를 줄일 수 있다
+>
+> ex) getter, setter생성 / 기본생성자 자동생성 / 매개변수 자동선언
+
+```java
+// 생성자를 통해, Service 클래스를 만들 때 꼭 Repository를 넣어주도록 스프링에게 알려줌
+public BoardService(BoardRepository boardRepository){
+    this.boardRepository = boardRepository;
+}
+```
+
+```java
+@RequiredArgsConstructor // 자동으로 위의 과정 실행
+```
+
+
+
+### DTO
+
+> VO (Value Object)
+
+```html
+테이블을 막 건드려도 될까?
+= read, update할 때 Course 클래스를 막 써도 될까?
+= 내가 아닌 다른 사람이 변경이라도 한다면?? 😱
+
+완충재로 활용하는 것이
+DTO(Data Transfer Object)입니다.
+```
+
+
+
+# API
+
+> 👉 클라이언트 - 서버 간의 약속입니다.
+> 클라이언트가 정한대로 서버에게 요청(Request)을 보내면, 서버가 요구사항을 처리하여 응답(Response)을 반환합니다.
+
+
+
+### REST
+
+> 👉 REST란, 주소에 명사, 요청 방식에 동사를 사용함으로써 의도를 명확히 드러냄을 의미합니다.
+
+- 여기에 쓰이는 동사는 우리가 JPA 시간에 배운 CRUD를 지칭합니다.
+- 즉 A에 대해 생성(POST)/조회(GET)/수정(PUT)/삭제(DELETE) 요청을 하는 것이죠.
+
+- 예시
+  - GET /courses → 강의 전체 목록 조회 요청
+  - GET /courses/1 → ID가 1번인 녀석 조회 요청
+  - POST /courses → 강의 생성 요청
+  - PUT /courses/3 → ID가 3번인 녀석 수정 요청
+  - DELETE /courses/2 → ID 2번인 녀석 삭제 요청
+
+
+
+#### GET
+
+```java
+@GetMapping("/api/boards")
+    public List<Board> getBoards(){
+        return boardRepository.findAll();
+    }
+```
+
+#### POST
+
+> `@RequestBody` POST의 특성 상 url에 데이터가 담기는 것이 아니라 body에 담긴다
+
+```java
+@PostMapping("/api/boards")
+public Board createBoard(@RequestBody BoardDTO boardDTO) {
+    // BoardDTO 는, 생성 요청을 의미합니다.
+    // 강의 정보를 만들기 위해서는 강의 제목과 튜터 이름이 필요하잖아요?
+    // 그 정보를 가져오는 녀석입니다.
+
+    // 저장하는 것은 DTO가 아니라 Board이니, DTO의 정보를 Board에 담아야 합니다.
+    // 잠시 뒤 새로운 생성자를 만듭니다.
+    Board board = new Board(boardDTO);
+
+    // JPA를 이용하여 DB에 저장하고, 그 결과를 반환합니다.
+    return boardRepository.save(board);
+}
+```
+
+
+
+#### PUT
+
+> `@PathVariable`로 url의 변수와 이름이 같은 변수를 할당한다
+
+```java
+@PutMapping("/api/boards/{id}")
+public Long updateBoard(@PathVariable Long id, @RequestBody BoardDTO boardDTO){
+    return boardService.update(id, boardDTO);
+}
+```
+
+
+
+#### DELETE
+
+```java
+@DeleteMapping("/api/boards/{id}")
+public void deleteBoard(@PathVariable Long id){
+    boardRepository.deleteById(id);
+}
+```
 
 
 
