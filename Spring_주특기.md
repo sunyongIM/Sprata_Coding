@@ -412,6 +412,19 @@ Course course = repository.findById(1L).orElseThrow(
 
 
 
+> Repository에 기능추가
+> https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods
+
+```java
+public interface BoardRepository extends JpaRepository<Board, Long> {
+    List<Board> findAllByOrderByModifiedAtDesc();
+}
+```
+
+
+
+
+
 ### Service의 개념
 
 > 스프링의 구조는 3가지 영역으로 나눌 수 있습니다.
@@ -589,6 +602,10 @@ public void deleteBoard(@PathVariable Long id){
     boardRepository.deleteById(id);
 }
 ```
+
+
+
+
 
 
 
