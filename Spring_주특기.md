@@ -447,9 +447,12 @@ Update 는 Service 부분에 작성해야 한다
 
 ## 데이터 변경 (Update)
 
+> [[Spring\] @Transactional 정리 (tistory.com)](https://devkingdom.tistory.com/287)
+
 1. Board 클래스에 update메서드를 추가한다
 2. Service클래스에서 Board클래스의 update를 이용하여 update JPA를 생성한다
 3. Application단에서 Service클래스의 update메서드를 호출하여 데이터 수정 기능을 구현한다
+3. @Transactional 어노테이션으로 인해 update가 완료된다
 
 ```java
 @Service // 스프링에게 이 클래스가 서비스임을 명시
@@ -605,7 +608,74 @@ public void deleteBoard(@PathVariable Long id){
 
 
 
+# JPA - PK / FK설정
+
+> [JPA를 알아보자-(4) JPA Foreign Key, 관계 | 기억을 위한 기록 (kowo1001.github.io)](https://kowo1001.github.io/jpa/jpa-4-jpa-foreign-key/)
 
 
 
+
+
+## 여러 Entity의 @GeneratedValue
+
+> 과제 프로젝트를 진행하며 두 개의 Entity를 구성하였고,
+> 두 개의 Entity 모두 Long 타입의 id를 PK로 갖는다
+
+#### 문제
+
+- 두개의 Entity의 id를 `GenerationType.AUTO`로 생성해줬더니 생성되는 숫자가 테이블 간에 공유가 됐다
+  예를들면, **테이블1에서 1,2,3,4 까지의 id를 생성하고 테이블2에서 id를 생성하면 5부터 생성**된다
+
+#### 원인
+
+- `GenerationType.AUTO`는 **서버에서 생성**해주기 때문에, 테이블마다 별개로 인식하지 않는다
+
+```java
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+```
+
+#### 해결
+
+- 첫 번째 방법은 `@SequenceGenerator`로 자동으로 하나씩 커지는 숫자를 생성해 주는 것이었다
+- 그리고 `@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOARD_SEQ_GENERATOR")`를 사용하여 생성한 `@SequenceGenerator`를 사용했다
+
+```java
+@SequenceGenerator(
+        name = "BOARD_SEQ_GENERATOR",
+        sequenceName = "BOARD_SEQ",
+        initialValue = 1,
+        allocationSize = 1
+)
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOARD_SEQ_GENERATOR")
+    private Long id;
+
+```
+
+
+
+- 두 번째 방법이 간단하고 효율적이었는데, `GenerationType.IDENTITY`를 사용하는 것이다
+- `GenerationType.IDENTITY`는 **DB에서 생성**하는 것이기 때문에 테이블마다 별개로 생성되어,
+  **모든 테이블의 id가 1부터 시작**하는 값을 갖는다
+- 기술 매니저님의 말로는 현업에서도 `GenerationType.IDENTITY`를 많이 사용한다고 하셨다
+
+```java
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+```
+
+
+
+
+
+## Hibernate
+
+
+
+# 배포
+
+## OG 태그
 
