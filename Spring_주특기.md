@@ -633,7 +633,7 @@ public void deleteBoard(@PathVariable Long id){
 
 #### 원인
 
-- `GenerationType.AUTO`는 **서버에서 생성**해주기 때문에, 테이블마다 별개로 인식하지 않는다
+- `GenerationType.AUTO`는 **서버에서 생성**해 DB에 전달 해주기 때문에, 테이블마다 별개로 인식하지 않는다
 
 ```java
     @Id
@@ -686,7 +686,7 @@ public void deleteBoard(@PathVariable Long id){
 
 1. RDS 구매
 
-2. RDS 포트 열어주기
+2. RDS 포트 열어주기 (3306번 포트)
 
 3. RDS 엔드포인트와 IntelliJ 연결
 
@@ -695,7 +695,7 @@ public void deleteBoard(@PathVariable Long id){
    - 스프링 부트를 MySQL과 연결하기
 
      ```yaml
-     spring.datasource.url=jdbc:mysql://나의엔드포인트:3306/myselectshop
+     spring.datasource.url=jdbc:mysql://나의엔드포인트:3306/RDS이름
      spring.datasource.username=나의USERNAME
      spring.datasource.password=나의패스워드
      spring.jpa.hibernate.ddl-auto=update
@@ -703,7 +703,7 @@ public void deleteBoard(@PathVariable Long id){
 
 5. EC2 구매 (AWS로 대여한 리눅스 컴퓨터)
 
-6. EC2 포트 열어주기
+6. EC2 포트 열어주기 (22번 포트는 원래 열려있음)
 
 7. EC2에 접속하기
 
@@ -805,3 +805,124 @@ public void deleteBoard(@PathVariable Long id){
   - Key fingerprint 관련 메시지가 나올 경우 Yes를 입력해주세요!
 
   - git bash를 종료할 때는 exit 명령어를 입력하여 ssh 접속을 먼저 끊어주세요.
+
+
+
+# 보안
+
+## XSS [ Cross-site Scripting ]
+
+[저장형 XSS(Stored Cross Site Scripting) 공격과 방어 - Junhyunny’s Devlogs](https://junhyunny.github.io/information/security/spring-mvc/stored-cross-site-scripting/)
+
+[반사형 XSS(Reflected Cross Site Scripting) 공격과 방어 - Junhyunny’s Devlogs](https://junhyunny.github.io/information/security/spring-mvc/reflected-cross-site-scripting/)
+
+[DOM 기반 XSS(DOM based Cross Site Scripting) 공격과 방어 - Junhyunny’s Devlogs](https://junhyunny.github.io/information/security/dom-based-cross-site-scripting/)
+
+> *주로 다른 웹사이트와 정보를 교환하는 식으로 작동하므로 사이트 간 스크립팅이라고 한다*
+>
+> SQL injection과 함께 웹 상에서 가장 기초적인 취약점 공격 방법의 일종으로, 악의적인 사용자가 **공격하려는 사이트에 스크립트를 넣는 기법**을 말한다. 공격에 성공하면 사이트에 접속한 사용자는 삽입된 코드를 실행하게 되며, 보통 의도치 않은 행동을 수행시키거나 쿠키나 세션 토큰 등의 민감한 정보를 탈취한다.
+>
+> 크로스 사이트 스크립팅이란 이름 답게, **자바스크립트를 사용하여 공격하는 경우가 많다**. 공격 방법이 단순하고 가장 기초적이지만, 많은 웹사이트들이 XSS에 대한 방어 조치를 해두지 않아 공격을 받는 경우가 많다. 여러 사용자가 접근 가능한 게시판 등에 코드를 삽입하는 경우도 많으며, 경우에 따라서는 메일과 같은 매체를 통해서도 전파된다. 심지어는 닉네임에 코드를 심기도 한다.
+>
+> 주로 CSRF를 하기 위해서 사용되기 때문에 종종 CSRF와 혼동되는 경우가 있으나, XSS는 자바스크립트를 실행시키는 것이고, CSRF는 특정한 행동을 시키는 것이므로 다르다.
+
+### Stored XSS (저장형 XSS)
+
+- 보안이 취약한 서버에 해커가 악성 스크립트를 저장함으로써 발생한다.
+
+### Reflected XSS (반사형 XSS)
+
+- 해커가 보안이 취약한 사이트를 통해서 악성 스크립트를 넣은 URL을 만들어 일반 사용자에게 스팸 메일로 전달한다.
+
+### DOM 기반 XSS
+
+- 보안에 취약한 JavaScript 코드로 DOM 객체를 제어하는 과정에서 발생합니다.
+
+
+
+## XSS 방어방법
+
+> **스크립트를 실행시키지 않는 방법을 이용한다**
+
+#### 저장형 XSS 방어
+
+1. 사용자 입력 검증 및 변경
+
+   - 사용자가 입력한 값을 그대로 저장하지 않습니다.
+
+   - 태그를 만들 때 사용하는 `<`, `>`을 HTML에서 사용하는 특수 문자로 변경합니다.
+
+2. 문자열 그대로 출력 (스크립트가 실행되지 않음)
+
+
+
+#### 반사형 XSS 방어
+
+1. 입력 값 제한
+   - 브라우저에서 사용자 입력 시 특수 문자를 제한합니다.
+2. 입력 값 치환
+   - 악성 스크립트를 만들 수 있는 특수 문자들을 치환합니다. 모든 요청에 대해 치환을 적용할 수 있도록 필터를 만들어 이를 적용합니다.
+3. 문자열 그대로 출력 (스크립트가 실행되지 않음)
+
+
+
+## CSRF [ **C**ross-**S**ite **R**equest **F**orgery ]
+
+[CSRF(Cross-Site Request Forgery) 공격과 방어 - Junhyunny’s Devlogs](https://junhyunny.github.io/information/security/spring-boot/spring-security/cross-site-reqeust-forgery/)
+
+> 웹 애플리케이션 취약점 중 하나로 인터넷 사용자(희생자)가 자신의 의지와는 무관하게 **공격자가 의도한 행위**(수정, 삭제, 등록 등)를 **특정 웹사이트에 요청하게 만드는 공격 방법**이다. 공격의 난이도가 높지 않아 흔히 사용된다
+>
+> CSRF를 통해 해커는 희생자의 권한을 도용하여 중요 기능을 실행하는 것이 가능합니다. CSRF는 해커가 사용자의 컴퓨터를 감염시키거나 페이스북 서버를 해킹을 해서 이뤄지는 공격은 아니고, **클라이언트의 세션과 쿠키에 저장된 회원정보를 탈취하여 악용하는 것이다**. 
+>
+> 그래서 CSRF 공격이 이뤄지려면 다음 조건이 만족되어야 합니다.
+>
+> 1. 위조 요청을 전송하는 서비스(페이스북)에 희생자가 로그인 상태
+>    (=> `Stateful` 한 서비스를 제공하기 위해 **인증된 사용자 정보를 세션에 저장하고, 세션 ID가 쿠키에 저장되기 때문에 문제가 발생**)
+>
+> 2. 희생자가 해커가 만든 피싱 사이트에 접속
+>
+> 또한 희생자가 해커가 만든 피싱 사이트를 하지 않더라도 해커가 **XSS 공격을 성공한 정상 사이트를 통해 CSRF 공격이 수행 될 수 도 있습니다**.
+
+
+
+## CSRF 방어방법
+
+> **탈취된 개인 정보인지 아닌지 확인하는 방법을 사용한다 (보낸 사람의 개인 정보가 맞는지 확인)**
+>
+> 일반적으로 CSRF 공격 방어는 조회성(HTTP GET Method) 데이터에는 방어 대상에 두지 않고, 쓰기/변경이 가능한 POST, PATCH, DELETE Method에만 적용하면 됩니다.
+
+1. Referrer 검증
+
+   - 서버에서 사용자가 요청한 헤더 정보에서 Referrer 확인 (**host와 Referrer값이 같은지 확인**)
+
+   - Back-end 단에서 request의 referrer를 확인하여 domain이 일치하는지 검증하는 방법이다. 일반적으로 referrer 검증만으로 대부분의 CSRF 공격을 방어 할 수 있지만, 같은 도메인 내의 페이지에 XSS 취약점이 있는 경우 CSRF 공격에 취약해 질 수 있다. 이때는 domain 단위 검증에서 좀 더 세밀하게 페이지 단위까지 일치하는지 검증을 하면 도메인 내의 타 페이지에서의 XSS 취약점에 대한 CSRF 공격을 방어할 수 있다.
+
+2. CSRF 토큰 검증
+
+   - 임의의 CSRF 토큰을 만들어 세션에 저장합니다. 요청하는 페이지에 `hidden` 타입 input 태그를 이용해 **토큰 값을 함께 전달**합니다. 이후 서버에서 세션에 저장된 **CSRF 토큰 값과 요청 파라미터에 담긴 토큰 값을 비교**합니다.
+
+
+
+제출
+
+> XSS, CSRF란 무엇이며, 어떻게 해결할 수 있는지 설명해주세요.
+
+```
+XSS는 저장형 XSS와 반사형 XSS가 있다.
+ 저장형 XSS는 보안이 취약한 서버에 해커가 악성 스크립트를 저장함으로써 발생하고, 반사형 XSS는 해커가 보안이 취약한 사이트를 통해서 악성 스크립트를 넣은 URL을 만들어 일반 사용자에게 스팸 메일로 전달하는 방식으로 작동한다.
+ XSS의 방어는 "악성 스크립트를 실행시키지 않는" 방법으로 진행되는데, 스크립트에 필수적인 태그나 특수 문자들을 치환하여 저장하고 특수 문자 입력을 제한하는 등의 방법을 사용한다.
+
+CSRF는 클라이언트의 세션과 쿠키에 저장된 회원 정보를 탈취하여 악용하는 것이다.
+ 세션과 쿠키에 중요한 정보가 있는 상태에서 피싱 사이트 등의 공격으로 정보를 탈취당하면,
+해커는 탈취한 정보를 바탕으로 클라이언트나 서버를 공격할 수 있게 된다.
+ CSRF의 방어는 "탈취 된 정보인지 아닌지 확인하는 방법을 사용한다"(보낸 사람의 개인 정보가 맞는지 확인). 이러한 방법으로는 헤더의 host와 Referrer이 같은지 확인하는 방법과, CSRF 토큰을 사용하는 방법이 있다.
+```
+
+
+
+
+
+
+
+# CORS
+
