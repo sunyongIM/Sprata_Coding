@@ -1,14 +1,8 @@
 > [[스파르타코딩클럽\] 자바 문법 뽀개기 (notion.so)](https://www.notion.so/80db7f3685304ab3ac749e0e9cd29b30)
 >
-> [[스파르타코딩클럽\] 웹개발의 봄, Spring - 1주차 (notion.so)](https://www.notion.so/Spring-1-3ce1633a7ad244749a8192f4cf55c93a)
+> [[스파르타코딩클럽\] 웹개발의 봄, Spring (notion.so)](https://www.notion.so/Spring-36bf83125a3e43acb863849f4902fa6c)
 >
-> [[스파르타코딩클럽\] 웹개발의 봄, Spring - 2주차 (notion.so)](https://www.notion.so/Spring-2-58046d5633454406b67905630ab7bc72)
->
->  
->
-> 
->
-> [[스파르타코딩클럽\] 웹개발의 봄, Spring - 5주차 (notion.so)](https://www.notion.so/Spring-5-e1b5ceb6ede84d70b3366f03207e2e8c)
+> [[스파르타코딩클럽\] Spring 심화반 (notion.site)](https://teamsparta.notion.site/Spring-5dceb99696bd471ab0618dfafc12f8f5)
 
 
 
@@ -23,6 +17,8 @@
 > H2 Database
 >
 > MySQL Driver
+
+
 
 
 
@@ -175,6 +171,7 @@ RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
 
 > JPA(Java Persistence API)는 스프링을 위해 만들어졌다
 > **Java로 코드를 작성하면 SQL로 번역**해줄 뿐만 아니라, **기본적인 기능이 거의 완벽하게 들어있다**
+> Java - ORM 기술에 대한 인터페이스의 모음
 
 JPA 사용 안했을 때
 
@@ -256,7 +253,7 @@ repository.save(new Customer("Chloe", "O'Brian"));
 
 # JPA
 
-
+> [[JPA\] ORM(Object-Relational Mapper) (tistory.com)](https://annajin.tistory.com/168)
 
 ```java
 @NoArgsConstructor // 기본생성자를 대신 생성해줍니다.
@@ -610,7 +607,15 @@ public void deleteBoard(@PathVariable Long id){
 
 # JPA - PK / FK설정
 
-> [JPA를 알아보자-(4) JPA Foreign Key, 관계 | 기억을 위한 기록 (kowo1001.github.io)](https://kowo1001.github.io/jpa/jpa-4-jpa-foreign-key/)
+> [[Spring\] JPA: 관계 표현. ManyToOne, OneToMany : 네이버 블로그 (naver.com)](https://m.blog.naver.com/sssang97/221777035267)
+>
+> [연관관계 매핑 기초 · JPA (gitbooks.io)](https://backend.gitbooks.io/jpa/content/chapter5.html)
+
+**방향**(Direction) : [단방향, 양방향]이 있다. 예를 들어 회원과 팀이 관계가 있을 때 회원 -> 팀 또는 팀 -> 회원 둘 중 한 쪽만 참조하는 것을 단방향 관계라 하고, 회원 -> 팀, 팀 -> 회원 양쪽 모두 서로 참조하는 것을 양방향 관계라 한다. 방향은 객체관계에만 존재하고 테이블 관계는 항상 양방향이다.
+
+**다중성**(Multiplicity) : [다대일(N:1), 일대다(1:N), 일대일(1:1), 다대다(N:N)] 다중성이다. 예를 들어 회원과 팀이 관계가 있을 때 여러 회원은 한 팀에 속하므로 회원과 팀은 다대일 관계다. 반대로 한 팀에 여러 회원이 소속될 수 있으므로 팀과 회원은 일대다 관계다.
+
+**연관관계의 주인**(Owner) : 객체를 양방향 연관관계로 만들면 연관관계의 주인을 정해야 한다.
 
 
 
@@ -677,5 +682,126 @@ public void deleteBoard(@PathVariable Long id){
 
 # 배포
 
-## OG 태그
+## 과정
 
+1. RDS 구매
+
+2. RDS 포트 열어주기
+
+3. RDS 엔드포인트와 IntelliJ 연결
+
+4. 스프링 부트 설정 (스프링 부트 설정의 대부분은 application.properties 에서 관리)
+
+   - 스프링 부트를 MySQL과 연결하기
+
+     ```yaml
+     spring.datasource.url=jdbc:mysql://나의엔드포인트:3306/myselectshop
+     spring.datasource.username=나의USERNAME
+     spring.datasource.password=나의패스워드
+     spring.jpa.hibernate.ddl-auto=update
+     ```
+
+5. EC2 구매 (AWS로 대여한 리눅스 컴퓨터)
+
+6. EC2 포트 열어주기
+
+7. EC2에 접속하기
+
+   - 윈도우는 git bash를 통해 접속한다
+
+     ```shell
+     ssh -i /path/my-key-pair.pem ubuntu@13.125.250.20
+     ```
+
+   - Key fingerprint 관련 메시지가 나올 경우 Yes를 입력
+
+   - git bash를 종료할 때는 exit 명령어를 입력하여 ssh 접속을 먼저 끊어주자
+
+8. 배포파일 빌드하기 (IntelliJ에서 Gradle의 build를 사용하여 쉽게 배포파일을 빌드한다)
+
+9. OpenJDK 설치하기
+
+   ```shell
+   sudo apt-get update
+   sudo apt-get install openjdk-8-jdk
+   java -version
+   # 자바 jdk ver8을 설치한다
+   ```
+
+10. Filezilla를 이용해서 배포 파일을 업로드하기
+
+11. 스프링 부트 작동시키기
+
+    ```shell
+    java -jar JAR파일명.jar
+    ```
+
+12. AWS에서 80, 8080 포트를 열어주기
+
+    - 80번 포트는 모든 url의 기본포트이므로,
+      **포트번호를 사용하지 않고 접속하려면 80번 포트를 열어야한다**
+
+13. `http://내AWS아이피:8080`로 접속 해보기
+
+포트포워딩 & nohup 적용하기
+
+> - 지금은 8080 포트에서 웹 서비스가 실행되고 있습니다. 그래서 매번 :8080 이라고 뒤에 붙여줘야 하죠. 뒤에 붙는 포트 번호를 없애려면 어떻게 해야할까요?
+> - http 요청에서는 80포트가 기본이기 때문에, 굳이 :80을 붙이지 않아도 자동으로 연결이 됩니다.
+> - 포트 번호를 입력하지 않아도 자동으로 접속되기 위해, 우리는 80포트로 오는 요청을 8080 포트로  전달하게 하는 포트포워딩(port forwarding) 을 사용하겠습니다.
+>
+> 포트 번호 없애기 - 리눅스 자체 포트포워딩을 작동시키기
+>
+> - 띄워둔 터미널에서 새롭게 설정을 적용하기 전에 돌아가고 있던 서비스는 일단 끄고! (터미널에서 ctrl + c)
+>
+> - 포트포워딩 룰을 입력합니다.
+>
+>   ```shell
+>   sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+>   ```
+>
+> - 다시 서비스 시작
+>
+> SSH 접속을 끊어도 서버가 계속 돌게 하기
+>
+> - 원격 접속을 종료하더라도 서버가 계속 돌아가게 하기
+>
+>   ```shell
+>   nohup java -jar JAR파일명.jar &
+>   ```
+>
+> - 서버 종료하기 \- 강제종료하는 방법
+>
+>   ```shell
+>   # 아래 명령어로 미리 pid 값(프로세스 번호)을 본다
+>   ps -ef | grep java
+>   
+>   # 아래 명령어로 특정 프로세스를 죽인다
+>   kill -9 [pid값]
+>   ```
+>
+> 
+
+
+
+
+
+## EC2
+
+- AWS EC2에 접속하기 (준비 상식 편)
+  - SSH(Secure Shell Protocol)
+    - 다른 컴퓨터에 접속할 때 쓰는 프로그램입니다. 다른 것들 보다 보안이 상대적으로 뛰어납니다.
+    - 접속할 컴퓨터가 22번 포트가 열려있어야 접속 가능합니다. AWS EC2의 경우, 이미 22번 포트가 열려있습니다. 확인해볼까요?
+
+- AWS EC2에 접속하기
+
+  - Window: ssh가 없으므로, git bash라는 프로그램을 이용!
+
+    - gitbash를 실행하고, 아래를 입력!
+
+    > ssh -i 받은키페어를끌어다놓기 ubuntu@AWS에적힌내아이피
+    >
+    > ex) `ssh -i /path/my-key-pair.pem ubuntu@13.125.250.20`
+
+  - Key fingerprint 관련 메시지가 나올 경우 Yes를 입력해주세요!
+
+  - git bash를 종료할 때는 exit 명령어를 입력하여 ssh 접속을 먼저 끊어주세요.
