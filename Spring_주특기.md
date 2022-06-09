@@ -167,41 +167,6 @@ RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
 
 
 
-### JPA
-
-> JPA(Java Persistence API)는 스프링을 위해 만들어졌다
-> **Java로 코드를 작성하면 SQL로 번역**해줄 뿐만 아니라, **기본적인 기능이 거의 완벽하게 들어있다**
-> Java - ORM 기술에 대한 인터페이스의 모음
-
-JPA 사용 안했을 때
-
-```java
-String query = "SELECT * FROM EMPLOYEE WHERE ID = ?";
-Employee employee = jdbcTemplate.queryForObject(
-  query, new Object[] { id }, new EmployeeRowMapper());
-```
-
-
-
-JPA 설정
-
-```java
-implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-```
-
-
-
-JPA 사용 했을 때
-
-> query없이 사용가능, 자동으로 SQL로 변환해준다
-
-```java
-repository.save(new Customer("Jack", "Bauer"));
-repository.save(new Customer("Chloe", "O'Brian"));
-```
-
-
-
 ### Repository
 
 > 클래스의 한 역할 중 하나이고, 데이터에 접근할 때 사용하는 하나의 도구라고 생각하면 된다
@@ -251,7 +216,83 @@ repository.save(new Customer("Chloe", "O'Brian"));
 
 
 
-# JPA
+# Spring boot 용어설명
+
+> [[Spring Boot\] 05/26 Sprin.. : 네이버블로그 (naver.com)](https://blog.naver.com/lkj7458/222747672065)
+
+## JPA
+
+> JPA(Java Persistence API) - Java를 이용하여 데이터 관리/유지 기법을 정리해 놓은 표준 Spec
+> **Java로 코드를 작성하면 SQL로 번역**해줄 뿐만 아니라, **기본적인 기능이 거의 완벽하게 들어있다**
+> Java - ORM 기술에 대한 인터페이스의 모음
+>
+> - 데이터 베이스 관련 작업을 대신 처리해주는 추상화된 계층의 구현 스펙
+> - 이전 사용되는 EJB라는 기술 스펙에서 Entity Bean이라는 데이터를 처리해주는 스펙을 정해준 것이 JPA의 효시
+> - JPA를 이해하기 위해서는 우선 ORM이라는 기법을 이해
+> - 데이터 베이스와 연관된 처리를 JPA 계층에서 처리하므로 좀 더 추상화된 형태의 코드를 제작하는 것으로 개발이 가능
+
+
+
+## ORM
+
+> ORM(Object-Relational Mapping) - 자바 객체와 RDBMS의 데이터를 자동으로 매핑해주는 것
+>
+> - 자바의 객체 지향 기술과 관계형 DataBase를 서로 연결 해주는 추상화된 기술
+> - ORM을 통해 객체 간의 관계를 바탕으로 SQL을 자동으로 생성하여 불일치 해결
+> - Object 필드와 데이터 베이스 데이터를 서로 매핑
+> - 객체를 사용하여 갖접적으로 데이터베이스 데이터를 다루는 개념
+> - 데이터 영속성을 위한 API(Persistant API)의 한 종류
+
+
+
+## **영속성**
+
+- 데이터가 사라지지않고 오래 지속되는 현상
+- DB에 저장하는 방식
+  - JDBC 사용하기(java에서 사용)
+  - Spring JDBC(JDBCTemplate 등을 사용)
+  - Persistence FrameWork 
+
+- JDBC 프로그래밍의 복잡함을 없애고, 간단한 작업만으로 데이터베이스와 연동되는 시스템을 빠르게 개발할 수 있다 
+
+- SQL Mapper와 Objet-Relational Mapping 두 종류로 구분할 수 있는데, JPA, Hibernate, Mybatis 등이 여기에 해당
+
+  
+
+
+
+JPA 사용 안했을 때
+
+```java
+String query = "SELECT * FROM EMPLOYEE WHERE ID = ?";
+Employee employee = jdbcTemplate.queryForObject(
+  query, new Object[] { id }, new EmployeeRowMapper());
+```
+
+
+
+JPA 설정
+
+```java
+implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+```
+
+
+
+JPA 사용 했을 때
+
+> query없이 사용가능, 자동으로 SQL로 변환해준다
+
+```java
+repository.save(new Customer("Jack", "Bauer"));
+repository.save(new Customer("Chloe", "O'Brian"));
+```
+
+
+
+
+
+### JPA code예시
 
 > [[JPA\] ORM(Object-Relational Mapper) (tistory.com)](https://annajin.tistory.com/168)
 
@@ -298,7 +339,7 @@ CREATE TABLE IF NOT EXISTS Course (
 
 
 
-### 인터페이스
+## 인터페이스
 
 > JPA는 Repository를 통해서만 사용할 수 있습니다.
 >
@@ -332,7 +373,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
 
 
-#### 상속의 개념
+## 상속의 개념
 
 > `public interface CourseRepository extends JpaRepository<Course, Long>{}`
 > 에서 사용한 **extends는 클래스의 상속을 선언**할 때 사용한다
@@ -354,14 +395,13 @@ class Tutor extends Person {
 	// Person 클래스를 상속했기 때문에,
 	// name 멤버변수와 getName() 메소드를 가지고 있습니다.
 }
-
 ```
 
 
 
 
 
-## 생성일자, 수정일자
+### 생성일자, 수정일자
 
 > 대부분의 DB는 기본으로 "생성일자"와 "수정일자"를 필드로 가지고 있다
 >
@@ -605,17 +645,65 @@ public void deleteBoard(@PathVariable Long id){
 
 
 
-# JPA - PK / FK설정
+# JPA - 연관관계 설정
 
 > [[Spring\] JPA: 관계 표현. ManyToOne, OneToMany : 네이버 블로그 (naver.com)](https://m.blog.naver.com/sssang97/221777035267)
 >
 > [연관관계 매핑 기초 · JPA (gitbooks.io)](https://backend.gitbooks.io/jpa/content/chapter5.html)
+>
+> [[JPA\] 3. 엔티티 연관 관계 매핑 정리/예제 (tistory.com)](https://cjw-awdsd.tistory.com/47)
+>
+> [JPA 연관 관계 한방에 정리 (단방향/양방향, 연관 관계의 주인, 일대일, 다대일, 일대다, 다대다) (tistory.com)](https://jeong-pro.tistory.com/231)
+
+
+
+> https://www.youtube.com/watch?v=brE0tYOV9jQ
+>
+> https://www.youtube.com/watch?v=hsSc5epPXDs 
 
 **방향**(Direction) : [단방향, 양방향]이 있다. 예를 들어 회원과 팀이 관계가 있을 때 회원 -> 팀 또는 팀 -> 회원 둘 중 한 쪽만 참조하는 것을 단방향 관계라 하고, 회원 -> 팀, 팀 -> 회원 양쪽 모두 서로 참조하는 것을 양방향 관계라 한다. 방향은 객체관계에만 존재하고 테이블 관계는 항상 양방향이다.
 
 **다중성**(Multiplicity) : [다대일(N:1), 일대다(1:N), 일대일(1:1), 다대다(N:N)] 다중성이다. 예를 들어 회원과 팀이 관계가 있을 때 여러 회원은 한 팀에 속하므로 회원과 팀은 다대일 관계다. 반대로 한 팀에 여러 회원이 소속될 수 있으므로 팀과 회원은 일대다 관계다.
 
 **연관관계의 주인**(Owner) : 객체를 양방향 연관관계로 만들면 연관관계의 주인을 정해야 한다.
+
+
+
+### @ManyToOne
+
+> N:1 관계를 표현하는 어노테이션이다. @ManyToOne이 붙은 엔티티가 N이고 반대 엔티티가 1이다.
+
+
+
+### @OneToMany
+
+> 1:N 관계를 표현하는 어노테이션이다. @OneToMany가 붙은 엔티티가 1이고 반대 엔티티가 M이다.
+
+@OneToMany 속성
+
+- `mappedBy = "반대쪽 매핑의 필드 이름값"`
+  - 양방향 매핑일 때 사용한다
+
+> mappedBy의 필요성
+>
+> 양방향 매핑에서 객체는 서로 다른 단방향 2개로 이루어져있기 때문에, 2개의 연관관계 ID가 필요하게 된다.
+> 즉, **외래키 2개를 관리해야 하는 상황에 관계형 데이터베이스는 외래키 1개를 가지고 관리하기 때문에**,
+> JPA는 **두개의 연관관계중 하나를 고르게 하기 위해 mappedBy를 설정한다**.
+> 여기서 관리되는 연관관계를 연관관계의 주인이라 한다.
+> 다시 말해 **mappedBy가 없는 엔티티(외래키가 생성되는 엔티티, @ManyToOne 어노테이션이 붙은 엔티티)가 연관관계의 주인**이다.
+>
+> 연관관계주인 방향에서 데이터를 입력하면 **연관관계 주인이 아닌 엔티티에 데이터를 넣지 않아도 데이터베이스에는 정상적으로 들어간다.**
+> (mappedBy로 매핑되어 알아서 데이터가 들어가기때문에, 연관관계 주인인 엔티티에만 데이터를 넣어주면 된다)
+
+
+
+### @JoinColumn(name="")
+
+>  외래키를 정의하는 어노테이션이다.
+
+
+
+![ManyToOne_JoinColumn](md-images/ManyToOne_JoinColumn.png)
 
 
 
@@ -925,4 +1013,125 @@ CSRF는 클라이언트의 세션과 쿠키에 저장된 회원 정보를 탈취
 
 
 # CORS
+
+
+
+
+
+# 팀 과제
+
+1. JPA가 무엇인가요?
+
+> - JPA(Java Persistence API)는 자바 진영의 ORM 기술 표준이며, JAVA 어플리케이션과 JDBC 사이에서 동작한다.
+> - 여기서 ORM(Object-Relational Mapping)은 객체와 테이블을 매핑해서 패러다임의 불일치 문제를 개발자 대신 해결해주는 프레임워크이다.
+
+2. Controller, Service, Repository 가 무엇인가요?
+
+> 1. Controller
+>    - 사용자의 요청을 받고, 클라이언트에게 응답하는 계층.
+>    - 요청에 대한 처리는 서비스에게 전담한다.
+> 2. Service
+>    - 전반적인 비즈니스 로직을 수행하는 계층.
+>    - 사용자의 요구사항을 처리한다.
+>    - DB의 정보가 필요할 때는 Repositroy에게 전담한다.
+> 3. Repository
+>    - DB 관리(연결, 해제, 자원 관리)를 어떻게 할 것인지를 정의해주는 계층
+
+3. 우리가 브라우저에서 구매한 도메인 주소를 입력하면 만들어 놓은 aws EC2 서버까지 전달이 되어서 해당 서버에게 요청을 보낼 수 있습니다. 이 과정이 상세하게 어떻게 진행되는지 그림으로 한번 그려볼까요?
+
+> ![DNS](md-images/DNS.png)
+
+4. 스프링 프레임워크는 어떤 특징 혹은 장점을 가지고 있나요? (3가지 이상)
+
+> 스프링은 내부적으로 **별도의 API를 사용하지 않고, 일반적인 Java 코드를 이용하여 객체를 구성**한다. 따라서, 이 프레임워크에서는 **개발자가 특정한 라이브러리나 컨테이너의 기술에 종속되지 않는다**. 또한, 프레임워크이기 때문에, 개발자의 수준과 실력에 상관없이 빠른 구현과 일정 수준의 품질을 기대할 수 있다. 담당자 혹은 개발자가 도중에 바뀌더라도, 유지보수에 관한 리스크를 줄일 수 있다. 
+
+5. 스프링에서 DI (의존성 주입) 를 사용하는 이유가 무엇인가요? 예를 통해 설명 해 보세요?
+
+> 의존 관계 주입(Dependency Injection)이란 외부에서 두 객체 간의 관계를 결정해주는 디자인 패턴으로 어떤 객체가 사용하는 의존 객체를 직접 만들어 사용하는게 아니라, 주입 받아 사용하는 방법이다. (new 연산자를 이용해서 객체를 생성하는 것이라고 생각하면 된다)
+>
+> 제어의 역전 (Inversion of Control)은 **IoC Container에게 모든 관계 설정에 대한 책임을 위임**하는 것이다
+>
+> ```java
+> #제어의 역전을 한마디로 표현
+> "Don't call us, we'll call you"
+> ```
+>
+> 즉, 각 객체간의 의존성을 스프링 컨테이너(Spring Container)가 자동으로 연결해주는 것으로, 개발자가 빈(Bean) 설정파일에 의존관계가 필요한 정보를 추가해주면, 스프링 컨테이너가 자동적으로 연결해 준다 의존성이란 한 객체가 다른 객체를 사용할 때 의존성이 있다고 한다.
+>
+> ![DI](md-images/DI.png)
+
+6. 스프링 시큐리티를 사용해 회원관리하는 방법을 순서도를 통해 정리해 보세요.
+
+![spring_security_X](md-images/spring_security_X.png)
+
+<center/>회원관리의 흐름
+
+
+
+![spring_security_O](md-images/spring_security_O.png)
+
+<center/> 스프링 시큐리티
+
+
+
+> - Client 의 요청은 모두 Spring Security 를 거침
+> - Spring Security 역할
+>   1. 인증/인가
+>      1. 성공 시: Controller 로 Client 요청 전달
+>         1. Client 요청 + 사용자 정보 (UserDetails)
+>      2. 실패 시: Controller 로 Client 요청 전달되지 않음
+>         1. Client 에게 Error Response 보냄
+
+
+
+7. 개발자 테스트 코드 작성 시 장/단점과 테스트 종류 별 (단위 테스트, 통합 테스트, E2E 테스트) 로 특징은?
+
+> 1. 스트 코드의 장단점
+>    - 장점: 예상 동작과 실제 동작을 비교하여 빠르고 정확한 테스트가 가능하기 때문에 초기 개발의 디버깅이 쉬워진다.
+>    - 단점: 테스트 코드까지 작성해야 하기 때문에 개발 시간이 오래 걸린다.
+> 2. 단위 테스트
+>    - 단위 테스트는 응용 프로그램에서 테스트 가능한 가장 작은 소프트웨어를 실행하여 예상대로 동작하는지 확인하는 테스트이다.
+>    - 일반적으로 클래스 또는 메소드 수준의 단위로 테스트한다.
+>    - 단위 테스트는 TDD와 함께 할 때 특히 더 강력해진다.
+> 3. 통합 테스트
+>    - 통합 테스트는 단위 테스트보다 더 큰 동작을 달성하기 위해 여러 모듈들을 모아 이들이 의도대로 협력하는지 확인하는 테스트이다.
+>    - 단위 테스트와 달리 개발자가 변경할 수 없는 부분(외부 라이브러리 등) 까지 묶어 검증할 때 사용한다.
+>    - 스프링부트 에서는 @SpringBootTest
+> 4. E2E 테스트
+>    - E2E(End to End)테스트는 개발물을 사용자 관점에서 테스트하는 방법이다.
+>    - 다양한 시스템, DB 등 앱의 올바른 작동을 사용자 관점에서 확인한다.
+>    - 다양한 앱의 의존관계가 정확히 작동하는지 확인한다.
+
+
+
+8. ORM, JPA, Spring Data JPA 를 구분해서 설명해 보세요.
+
+> **ORM**(Object-Relational Mapping) - 자바 객체와 RDBMS의 데이터를 자동으로 매핑해주는 것을 의미
+>
+> - 자바의 객체 지향 기술과 관계형 DataBase를 서로 연결 해주는 추상화된 기술
+> - ORM을 통해 객체 간의 관계를 바탕으로 SQL을 자동으로 생성하여 불일치 해결
+> - Object 필드와 데이터 베이스 데이터를 서로 매핑
+> - 객체를 사용하여 갖접적으로 데이터베이스 데이터를 다루는 개념
+> - 데이터 영속성을 위한 API(Persistant API)의 한 종류
+>
+> 
+>
+> **JPA**(Java Persistence API) - Java를 이용하여 데이터 관리/유지 기법을 정리해 놓은 표준 Spec
+>
+> - 데이터 베이스 관련 작업을 대신 처리해주는 추상화된 계층의 구현 스펙
+> - Java의 ORM 기술에 대한 인터페이스의 모음
+>
+> 
+>
+> **Spring Data JPA**는 스프링 프레임워크에서 JPA를 편리하게 사용할 수 있도록 지원하는 프로젝트이고, 데이터 접근 계층을 개발할 때 지루하게 반복되는 CRUD 문제를 해결해준다.
+>
+> - CRUD를 처리하기 위한 공통 인터페이스를 제공한다.
+> - Repository를 개발할 때 인터페이스만 작성하면 실행 시점에 구현 객체를 동적으로 생성해서 주입해준다.
+> - 따라서, 구현 클래스 없이 인터페이스만 작성해도 개발을 완료할 수 있다.
+
+
+
+9. Optional) 절차지향 프로그래밍, 객체지향 프로그래밍,  관점지향 프로그래밍은 각각 어떻게 다른가요? (각각 예제 1개 이상)
+
+
 
