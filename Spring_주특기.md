@@ -20,8 +20,6 @@
 
 
 
-
-
 # 웹의 동작 개념
 
 > 우리가 보는 웹페이지의 원리
@@ -154,6 +152,21 @@ RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
 
 
 
+### ERD
+
+> ERD [ Entity Relationship Diagram ]
+> 관계형 데이터베이스를 다이어그램(도표)화 한 것
+>
+> 무료 ERD사이트
+> https://dbdiagram.io/home
+>
+> 연관관계와 dbdiagram.io 사용법
+> https://conanmoon.medium.com/%EB%8D%B0%EC%9D%B4%ED%84%B0%EA%B3%BC%ED%95%99-%EC%9C%A0%EB%A7%9D%EC%A3%BC%EC%9D%98-%EB%A7%A4%EC%9D%BC-%EA%B8%80%EC%93%B0%EA%B8%B0-%EC%97%B4%ED%95%9C-%EB%B2%88%EC%A7%B8-%EC%9D%BC%EC%9A%94%EC%9D%BC-31a084f98e2c
+
+
+
+
+
 ## Model
 
 > DB를 사용하기 위한 영역
@@ -254,10 +267,7 @@ RDBMS의 한 종류로, 서버가 켜져있는 동안에만 작동하는 RDB
   - Persistence FrameWork 
 
 - JDBC 프로그래밍의 복잡함을 없애고, 간단한 작업만으로 데이터베이스와 연동되는 시스템을 빠르게 개발할 수 있다 
-
 - SQL Mapper와 Objet-Relational Mapping 두 종류로 구분할 수 있는데, JPA, Hibernate, Mybatis 등이 여기에 해당
-
-  
 
 
 
@@ -287,8 +297,6 @@ JPA 사용 했을 때
 repository.save(new Customer("Jack", "Bauer"));
 repository.save(new Customer("Chloe", "O'Brian"));
 ```
-
-
 
 
 
@@ -396,8 +404,6 @@ class Tutor extends Person {
 	// name 멤버변수와 getName() 메소드를 가지고 있습니다.
 }
 ```
-
-
 
 
 
@@ -526,6 +532,44 @@ public class BoardService {
 
 1. Application단에서 `JpaRepository`를 상속받은 BoardRepository 인터페이스 클래스의
    JPA 메서드를 사용하여 삭제 기능을 구현
+
+
+
+### @RequestBody
+
+[[Spring\] - @RequestBody 어노테이션의 동작방식 (tistory.com)](https://kim-jong-hyun.tistory.com/60)
+
+> POST, PUT방식으로 Rest 소통할때 주로 쓰이게 된다
+> 응답의 Body의 값을 JSON으로 변환하여 받아온다
+
+
+
+### @RequestParam VS @PathVariable
+
+https://pomo0703.tistory.com/92
+
+> URL에 데이터를 보내는 두 가지 방법
+
+![RequestParam_PathVariable_01](md-images/RequestParam_PathVariable_01.png)
+
+
+
+> **어떤 resource를 식별하고 싶으면 Path Variable**를, **정렬이나 필터링을 한다면 Query Parameter**를 사용하는 것이 좋다.
+>
+> Path Variable은 REST API에서 값을 호출할 때 주로 사용되고,
+> Query Parameter는 게시판의 페이지 및 검색 정보를 전달하는 방식에서 많이 사용된다.
+>
+> ```url
+> // 프로그래머인 사용자 목록을 가져온다.
+> GET http://localhost:8080/user?occupation=programmer
+> 
+> // id가 1인 사용자를 가져온다.
+> GET http://localhost:8080/user/1
+> ```
+
+
+
+
 
 
 
@@ -706,6 +750,21 @@ public void deleteBoard(@PathVariable Long id){
 ![ManyToOne_JoinColumn](md-images/ManyToOne_JoinColumn.png)
 
 
+
+## Cascade 옵션
+
+> [[JPA\]엔티티 상태 & Cascade (velog.io)](https://velog.io/@max9106/JPA엔티티-상태-Cascade)
+
+
+
+### Entity의 상태
+
+1. `Transient`: 객체를 생성하고, 값을 주어도 JPA나 hibernate가 그 객체에 관해 아무것도 모르는 상태. 즉, 데이터베이스와 매핑된 것이 아무것도 없다.
+2. `Persistent`: 저장을 하고나서, JPA가 아는 상태(관리하는 상태)가 된다. 그러나 .save()를 했다고 해서, 이 순간 바로 DB에 이 객체에 대한 데이터가 들어가는 것은 아니다. JPA가 persistent 상태로 관리하고 있다가, 후에 데이터를 저장한다.(1차 캐시, Dirty Checking(변경사항 감지), Write Behind(최대한 늦게, 필요한 시점에 DB에 적용) 등의 기능을 제공한다)
+3. `Detached`: JPA가 더이상 관리하지 않는 상태. JPA가 제공해주는 기능들을 사용하고 싶다면, 다시 persistent 상태로 돌아가야한다.
+4. `Removed`: JPA가 관리하는 상태이긴 하지만, 실제 commit이 일어날 때, 삭제가 일어난다.
+
+**cascade는 이러한 상태변화를 전이시키는 것이다.**
 
 
 
