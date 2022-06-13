@@ -40,6 +40,12 @@
 
 
 
+# HTTP의 구조
+
+> [HTTP🍔 — Duck9s' (tistory.com)](https://duckgugong.tistory.com/156#--%--%EB%AC%B-%EC%--%--%ED%--%-C%---%--Stateless%--%ED%--%--%EB%A-%-C%ED%--%A-%EC%BD%-C)
+
+
+
 ## RestController
 
 > JSON 데이터로 응답하려면 RestController를 사용해야 한다
@@ -48,7 +54,7 @@
 
 - Rest ?
   - 서버의 응답이 JSON 형식임을 나타냅니다.
-  - HTML, CSS 등을 주고받을 때는 Rest 를 붙이지 않습니다.
+  - HTML, CSS, JS 등을 주고받을 때는 Rest 를 붙이지 않습니다.
 
 - Conroller ?
 
@@ -95,10 +101,6 @@ public class CourseController {
 - Javascript - NPM
 - Python - pip
 - Java - mavenCentral, jcenter
-
-
-
-
 
 # MVC모델 요약
 
@@ -549,6 +551,9 @@ public class BoardService {
 https://pomo0703.tistory.com/92
 
 > URL에 데이터를 보내는 두 가지 방법
+>
+> - @RequestParam (쿼리 파라미터 [ Query Parameter ])
+> - @PathVariable 
 
 ![RequestParam_PathVariable_01](md-images/RequestParam_PathVariable_01.png)
 
@@ -618,7 +623,7 @@ DTO(Data Transfer Object)입니다.
 
 
 
-### REST
+### Rest
 
 > 👉 REST란, 주소에 명사, 요청 방식에 동사를 사용함으로써 의도를 명확히 드러냄을 의미합니다.
 
@@ -631,6 +636,12 @@ DTO(Data Transfer Object)입니다.
   - POST /courses → 강의 생성 요청
   - PUT /courses/3 → ID가 3번인 녀석 수정 요청
   - DELETE /courses/2 → ID 2번인 녀석 삭제 요청
+
+
+
+**Rest API 설계 규칙**
+
+> [Rest API / Rest-ful — Duck9s' (tistory.com)](https://duckgugong.tistory.com/301)
 
 
 
@@ -698,6 +709,10 @@ public void deleteBoard(@PathVariable Long id){
 > [[JPA\] 3. 엔티티 연관 관계 매핑 정리/예제 (tistory.com)](https://cjw-awdsd.tistory.com/47)
 >
 > [JPA 연관 관계 한방에 정리 (단방향/양방향, 연관 관계의 주인, 일대일, 다대일, 일대다, 다대다) (tistory.com)](https://jeong-pro.tistory.com/231)
+>
+> [[JPA\] 양방향 연관관계 (tistory.com)](https://ict-nroo.tistory.com/122)
+>
+> [JPA - 연관 관계 매핑 (@OneToMany , @ManyToOne , @OneToOne , @ManyToMany ) (velog.io)](https://velog.io/@devsh/JPA-연관-관계-매핑-OneToMany-ManyToOne-OneToOne-ManyToMany)
 
 
 
@@ -705,11 +720,22 @@ public void deleteBoard(@PathVariable Long id){
 >
 > https://www.youtube.com/watch?v=hsSc5epPXDs 
 
-**방향**(Direction) : [단방향, 양방향]이 있다. 예를 들어 회원과 팀이 관계가 있을 때 회원 -> 팀 또는 팀 -> 회원 둘 중 한 쪽만 참조하는 것을 단방향 관계라 하고, 회원 -> 팀, 팀 -> 회원 양쪽 모두 서로 참조하는 것을 양방향 관계라 한다. 방향은 객체관계에만 존재하고 테이블 관계는 항상 양방향이다.
+**방향**(Direction) : [단방향, 양방향]이 있다.
+예를 들어 회원과 팀이 관계가 있을 때 회원 -> 팀 또는 팀 -> 회원 **둘 중 한 쪽만 참조하는 것을 단방향 관계**라 하고, 회원 -> 팀, 팀 -> 회원 **양쪽 모두 서로 참조하는 것을 양방향 관계**라 한다. ***방향은 객체관계에만 존재하고 테이블 관계는 항상 양방향***이다.
 
 **다중성**(Multiplicity) : [다대일(N:1), 일대다(1:N), 일대일(1:1), 다대다(N:N)] 다중성이다. 예를 들어 회원과 팀이 관계가 있을 때 여러 회원은 한 팀에 속하므로 회원과 팀은 다대일 관계다. 반대로 한 팀에 여러 회원이 소속될 수 있으므로 팀과 회원은 일대다 관계다.
 
 **연관관계의 주인**(Owner) : 객체를 양방향 연관관계로 만들면 연관관계의 주인을 정해야 한다.
+
+
+
+- ## 양방향 매핑시 가장 많이 하는 실수
+
+  > 1. **연관관계의 주인**에 값을 입력하지 않음.
+  > 2. mappedBy 에 필드 값을 수정하는 것.
+  > 3. 이 필드는 **읽기 전용이 되는 것을 꼭 명심**해야 함.
+  > 4. 양방향 매핑시에 **무한 루프 조심**, toString, lombok, JSON 생성 라이브러리
+  > 5. 스프링 부트는 컨트롤러 레이어에서 유저로 데이터를 반환할 때 @ResponseBody 로 반환하는 경우 Json 파싱을 하게 되는데 이 때 Jackson 라이브러리를 사용합니다. 만약 엔티티를 컨트롤러에서 사용하게 되면 무한 참조가 발생하게 됩니다. 처리하는 방법은 @JsonIgnore 나 엔티티를 사용하지 않는 방식이나 일반적으로 엔티티를 사용하지 않고 DTO 로 변환해서 사용하는 것이 매우 매우 매우 권장됩니다.
 
 
 
@@ -921,7 +947,7 @@ public void deleteBoard(@PathVariable Long id){
 >   ```shell
 >   # 아래 명령어로 미리 pid 값(프로세스 번호)을 본다
 >   ps -ef | grep java
->   
+>       
 >   # 아래 명령어로 특정 프로세스를 죽인다
 >   kill -9 [pid값]
 >   ```
@@ -1071,9 +1097,19 @@ CSRF는 클라이언트의 세션과 쿠키에 저장된 회원 정보를 탈취
 
 
 
-# CORS
+## CORS
 
 
+
+### Reverse Proxy & Port Forwarding
+
+[Proxy (Forward, Reverse), CORS — Duck9s' (tistory.com)](https://duckgugong.tistory.com/255)
+
+
+
+## Access Token (Refresh Token)
+
+[[인증\] Access Token, Refresh Token — Today Sangmin Learned (tistory.com)](https://steadily-worked.tistory.com/469)
 
 
 
@@ -1145,7 +1181,7 @@ CSRF는 클라이언트의 세션과 쿠키에 저장된 회원 정보를 탈취
 
 7. 개발자 테스트 코드 작성 시 장/단점과 테스트 종류 별 (단위 테스트, 통합 테스트, E2E 테스트) 로 특징은?
 
-> 1. 스트 코드의 장단점
+> 1. 테스트 코드의 장단점
 >    - 장점: 예상 동작과 실제 동작을 비교하여 빠르고 정확한 테스트가 가능하기 때문에 초기 개발의 디버깅이 쉬워진다.
 >    - 단점: 테스트 코드까지 작성해야 하기 때문에 개발 시간이 오래 걸린다.
 > 2. 단위 테스트
@@ -1193,4 +1229,42 @@ CSRF는 클라이언트의 세션과 쿠키에 저장된 회원 정보를 탈취
 9. Optional) 절차지향 프로그래밍, 객체지향 프로그래밍,  관점지향 프로그래밍은 각각 어떻게 다른가요? (각각 예제 1개 이상)
 
 
+
+# Spring 특징
+
+> [제어의 역전(Inversion of Control, IoC) 이란? :: Develogs (tistory.com)](https://develogs.tistory.com/19)
+>
+> 
+
+
+
+## 코드 컨벤션 (Code Convention)
+
+[[Guide\]스프링 네이밍 컨벤션(Coding convention) - 개발자 지니의 기록 (tistory.com)](https://cocobi.tistory.com/27)
+
+> (스택별) 코드의 생산성과 통일성을 위한 작성 방법에 대한 협의
+
+
+
+### 협업 시 ES린트 설정 해보기
+
+> 오래된 스웨터의 보푸라기 같은 것을 린트(Lint)라고 부른다. 보푸라기가 많으면 옷이 보기 좋지 않은데 코드에서도 이런 보프라기가 있다. 들여쓰기를 맞추지 않은 경우, 선언한 변수를 사용하지 않은 경우......
+>
+> 보프라기 있는 옷을 입을 수는 있듯이 이러한 코드로 만든 어플리케이션도 동작은 한다. 그러나 코드의 가독성이 떨어지고 점점 유지보수하기 어려운 애물단지가 되어버리기 일쑤다.
+>
+> 보푸라기를 제거하는 린트 롤러(Lint roller)처럼 코드의 오류나 버그, 스타일 따위를 점검하는 것을 [린트(Lint) 혹은 린터(Linter)](https://en.wikipedia.org/wiki/Lint_(software))라고 부른다.
+
+
+
+### Github Action
+
+> 배포 관련
+
+
+
+## 도커
+
+> 도커는 EC2과 같은 가상환경
+> mysql 이미지(패키지랑 비슷)
+> 컨테이너(프로젝트와 비슷)를 만들어서
 
