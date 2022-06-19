@@ -20,6 +20,22 @@
 
 
 
+# 스프링
+
+> 디자인 패턴
+>
+> https://velog.io/@sangmin7648/Spring%EC%9D%98-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4%EB%93%A4
+
+## DI
+
+> [스프링 - 생성자 주입을 사용해야 하는 이유, 필드인젝션이 좋지 않은 이유 (yaboong.github.io)](https://yaboong.github.io/spring/2019/08/29/why-field-injection-is-bad/)
+
+## IOC
+
+## AOP
+
+
+
 # 웹의 동작 개념
 
 > 우리가 보는 웹페이지의 원리
@@ -537,6 +553,29 @@ public class BoardService {
 
 
 
+# 데이터 받기
+
+> [[Spring\] @RequestBody, @ModelAttribute, @RequestParam의 차이 - MangKyu's Diary (tistory.com)](https://mangkyu.tistory.com/72)
+
+**[ RequestBody, ModelAttribute, RequestParam 간단 정리 ]**
+
+- RequetParam
+
+1개의 HTTP 파라미터를 얻기 위해 사용됨
+필수 여부가 true이기 때문에 반드시 필요한 경우가 아니라면 required=false 설정이 필요함
+
+- RequestBody
+
+Json 형태로 받은 HTTP Body 데이터를 MessageConverter를 통해 변환시킴
+값을 주입하지 않고 변환을 시키므로(엄밀히는 Reflection을 사용하여 할당), 변수들의 생성자나 Setter함수가 없어도 정상적으로 값이 할당됨
+
+- ModelAttribute
+
+multipart/form-data 형태로 받은 HTTP Body 데이터와 HTTP 파라미터들을 Setter를 통해 1대1로 객체에 바인딩시킴
+변환이 아닌 값을 주입시키므로, 변수들의 생성자나 Setter함수가 없으면 변수들이 저장되지 않음                    
+
+
+
 ### @RequestBody
 
 [[Spring\] - @RequestBody 어노테이션의 동작방식 (tistory.com)](https://kim-jong-hyun.tistory.com/60)
@@ -574,11 +613,13 @@ https://pomo0703.tistory.com/92
 
 
 
-
-
-
-
 # Lombok, DTO
+
+> 롬복 사용상 주의점
+>
+> https://kwonnam.pe.kr/wiki/java/lombok/pitfall
+>
+> https://cheese10yun.github.io/lombok/
 
 
 
@@ -598,6 +639,12 @@ public BoardService(BoardRepository boardRepository){
 ```java
 @RequiredArgsConstructor // 자동으로 위의 과정 실행
 ```
+
+
+
+**Lombok의 Builder 패턴 이용**
+
+> https://royleej9.tistory.com/entry/Lombok-Builder
 
 
 
@@ -847,6 +894,22 @@ public void deleteBoard(@PathVariable Long id){
 
 
 
+## 순환참조
+
+> https://velog.io/@minchae75/Spring-Boot-JPA-%EC%88%9C%ED%99%98-%EC%B0%B8%EC%A1%B0-%ED%95%B4%EA%B2%B0
+
+
+
+### Jackson 어노테이션
+
+> https://yonguri.tistory.com/145
+>
+> https://yeongcheon.github.io/posts/2019-03-01-jpa-jackson/
+
+
+
+
+
 
 
 ## Hibernate
@@ -947,12 +1010,15 @@ public void deleteBoard(@PathVariable Long id){
 >   ```shell
 >   # 아래 명령어로 미리 pid 값(프로세스 번호)을 본다
 >   ps -ef | grep java
->       
+>             
 >   # 아래 명령어로 특정 프로세스를 죽인다
 >   kill -9 [pid값]
 >   ```
 >
-> 
+
+
+
+
 
 
 
@@ -981,7 +1047,300 @@ public void deleteBoard(@PathVariable Long id){
 
 
 
+# AOP
+
+> AOP [ Aspect Oriented Programming ] 를 통해 부가기능을 모듈화
+>
+> **'부가기능'**은 '핵심기능'과는 관점(Aspect), 관심이 다르기에
+> '핵심기능'과 분리해서 **'부가기능'** 중심으로 설계, 구현 가능
+
+- **'핵심기능**': 각 API 별 수행해야 할 비즈니스 로직
+
+  ex) 상품 키워드 검색, 관심상품 등록, 회원 가입, 관심상품에 폴더 추가, ....
+
+- **'부가기능'**: 핵심기능을 보조하는 기능
+
+  ex) Validation, 회원 패턴 분석을 위한 로그 기록, API 수행시간 저장
+
+![AOP_module](md-images/AOP_module.png)
+
+
+
+## 스프링이 제공하는 AOP
+
+1. 어드바이스: 부가기능
+2. 포인트컷: 부가기능 적용위치
+
+
+
+**AOP의 기능**
+
+![AOP_Spring](md-images/AOP_Spring.png)
+
+
+
+**AOP의 발동시점**
+
+- 시퀀스 다이어그램 (Sequence Diagram)
+
+  - AOP 적용 전
+
+  ![AOP_sequence_X](md-images/AOP_sequence_X.png)
+
+  - AOP 적용 후
+
+    ![AOP_sequence_O](md-images/AOP_sequence_O.png)
+
+    - DispatcherServlet 과 ProductController 입장에서는 변화가 전혀 없음
+
+      - 호출되는 함수의 input, output 이 완전 동일
+
+      - **"joinPoint.proceed()"** 에 의해서 원래 호출하려고 했던 함수, 인수(argument) 가 전달됨
+
+        → createProduct(requestDto)
+
+- 스프링 서버가 기동될 때
+
+  - 핵심 기능 DI 시
+  - 프록시 객체를 중간에 삽입
+
+
+
+## 스프링 AOP 어노테이션
+
+1. @Aspect
+
+   - 스프링 빈 (Bean) 클래스에만 적용 가능
+
+2. 어드바이스 종류
+
+   - @Around: '핵심기능' 수행 전과 후 (@Before + @After)
+   - @Before: '핵심기능' 호출 전 (ex. Client 의 입력값 Validation 수행)
+   - @After:  '핵심기능' 수행 성공/실패 여부와 상관없이 언제나 동작 (try, catch 의 finally() 처럼 동작)
+   - @AfterReturning: '핵심기능' 호출 성공 시 (함수의 Return 값 사용 가능)
+   - @AfterThrowing: '핵심기능' 호출 실패 시. 즉, 예외 (Exception) 가 발생한 경우만 동작 (ex. 예외가 발생했을 때 개발자에게 email 이나 SMS 보냄)
+
+3. 포인트컷
+
+   - 포인트컷 Expression Language
+
+     - 포인트컷 Expression 형태
+
+       ```bash
+       execution(modifiers-pattern? return-type-pattern declaring-type-pattern? **method-name-pattern(param-pattern)** throws-pattern?)
+       ```
+
+       - ? 는 생략 가능
+
+     - 포인트컷 Expression 예제
+
+       ```java
+       @Around("execution(public * com.sparta.springcore.controller..*(..))")
+       public Object execute(ProceedingJoinPoint joinPoint) throws Throwable { ... }
+       ```
+
+     - modifiers-pattern
+
+       - **public**, private, *
+
+     - return-type-pattern
+
+       - void, String, List<String>, *****
+
+     - declaring-type-pattern
+
+       - 클래스명 (패키지명 필요)
+       - **com.sparta.springcore.controller.*** - controller 패키지의 모든 클래스에 적용
+       - **com.sparta.springcore.controller..** - controller 패키지 및 하위 패키지의 모든 클
+
+     - **method-name-pattern(param-pattern)**
+
+       - 함수명
+         - **addFolders** : addFolders() 함수에만 적용
+         - **add*** : add 로 시작하는 모든 함수에 적용
+       - 파라미터 패턴 (param-pattern)
+         - **(com.sparta.springcore.dto.FolderRequestDto)** - FolderRequestDto 인수 (arguments) 만 적용
+         - **()** - 인수 없음
+         - **(\*)** - 인수 1개 (타입 상관없음)
+         - **(..)** - 인수 0~N개 (타입 상관없음)
+
+     - @Pointcut
+
+       - 포인트컷 재사용 가능
+
+       - 포인트컷 결합 (combine) 가능
+
+         ```java
+         @Component
+         @Aspect
+         public class Aspect {
+         	@Pointcut("execution(* com.sparta.springcore.controller.*.*(..))")
+         	private void forAllController() {}
+         
+         	@Pointcut("execution(String com.sparta.springcore.controller.*.*())")
+         	private void forAllViewController() {}
+         
+         	@Around("forAllContorller() && !forAllViewController")
+         	public void saveRestApiLog() {
+         		...
+         	}
+         
+         	@Around("forAllContorller()")
+         	public void saveAllApiLog() {
+         		...
+         	}	
+         }
+         ```
+
+- Controller - Service - Repository 3계층에 맞춰 구현을 해야 하는 다른 이유
+  - Controller 에 비즈니스 로직을 추가한다면?
+  - Controller 에서 Repository 를 바로 호출한다면??
+
+
+
 # 보안
+
+## JWT
+
+## JWT 로그인 구현하기
+
+- 1. JWT 란?
+
+  - JWT 사용이유 파악
+
+    1. 서버가 1대인 경우
+
+       ![JWT_one_server](md-images/JWT_one_server.png)
+
+       - Session1 이 모든 Client 의 로그인 정보 소유
+
+    2. 서버가 2대 이상인 경우
+
+       - 서버의 대용량 트래픽 처리를 위해 서버 2대 이상 운영 필요
+
+         ![JWT_Servers&LoadBalancer](md-images/JWT_Servers&LoadBalancer.png)
+
+       - Session 마다 다른 Client 로그인 정보를 가지고 있을 수 있음
+         - Session1: Client1, Client2, Client3
+         - Session2: Client4
+         - Session3: Client5, Client6
+       - Client 1 로그인 정보를 가지고 있지 않은 Sever2 나 Server3 에 API 요청을 하게되면 어떻하지?
+         - 해결방법
+           1. Sticky Session: Client 마다 요청 Server 고정
+           2. 세션 저장소 생성
+
+    3. 세션 저장소 생성
+
+       ![JWT_Servers&SessionStorage](md-images/JWT_Servers&SessionStorage.png)
+
+       - Session storage 가 모든 Client 의 로그인 정보 소유
+
+  1. JWT 사용
+
+     - 로그인 정보를 **Server** 에 저장하지 않고, **Client** 에 로그인정보를 JWT 로 암호화하여 저장 → JWT 통해 인증/인가
+
+       ![JWT_Use_JWT](md-images/JWT_Use_JWT.png)
+
+     - 모든 서버에서 **동일한 Secret Key** 소유
+
+     - Secret Key 통한 암호화 / 위조 검증 (복호화 시)
+
+       ![JWT_Usage](md-images/JWT_Usage.png)
+
+     - JWT 장/단점
+
+       1. 장점
+          - 동시 접속자가 많을 때 서버 측 부하 낮춤
+          - Client, Sever 가 다른 도메인을 사용할 때
+            - 예) 카카오 OAuth2 로그인 시 JWT Token 사용
+       2. 단점
+          - 구현의 복잡도 증가
+          - JWT 에 담는 내용이 커질 수록 네트워크 비용 증가 (클라이언트 → 서버)
+          - 기생성된 JWT 를 일부만 만료시킬 방법이 없음
+          - Secret key 유출 시 JWT 조작 가능
+
+  - JWT 사용 흐름 Overview
+
+    1. Client 가 username, password 로 로그인 성공 시
+
+       1. "로그인 정보" → JWT 로 **암호화** (Secret Key 사용)
+
+          **Sample**
+
+          ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ef10ce2a-181e-4cf4-95bc-3a985e00fb6f/Untitled.png)
+
+       2. **JWT** 를 Client 응답에 전달
+
+       3. Client 에서 JWT 저장 (쿠키, Local storage 등)
+
+    2. Client 에서 JWT 통해 인증방법
+
+       1. JWT 를 API 요청 시마다 Header 에 포함
+
+          예) HTTP Headers
+
+          ```json
+          Content-Type: application/json
+          **Authorization: Bearer** **<JWT>
+          ...**
+          ```
+
+       2. Server
+
+          1. Client 가 전달한 **JWT 위조 여부 검증** (Secret Key 사용)
+
+          2. JWT 유효기간이 지나지 않았는지 검증
+
+          3. 검증 성공시,
+
+             1. JWT → "로그인  정보" (**UserDetailsImpl**) 만들어 사용
+
+                ex) **GET /api/products** : JWT 보낸 사용자의 관심상품 목록 조회
+
+  - JWT 구조
+
+    - JWT 는 누구나 평문으로 복호화 가능
+
+    - 하지만 Secret Key 가 없으면 JWT 수정 불가능
+
+      → 결국 JWT 는 **Read only 데이터**
+
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d44bc9eb-9bfb-4dd1-922a-c6ab3ed5046c/Untitled.png)
+
+    1. Header
+
+       ```json
+       {
+         "alg": "HS256",
+         "typ": "JWT"
+       }
+       ```
+
+    2. Payload
+
+       ```json
+       {
+         "sub": "1234567890",
+         "username": "제이홉",
+         "admin": true
+       }
+       ```
+
+    3. Signature
+
+## Spring Security
+
+> [Spring Security (tistory.com)](https://iyk2h.tistory.com/158) - 스프링 시큐리티란?
+>
+> **[SPRING SECURITY + JWT 회원가입, 로그인 기능 구현 (tistory.com)](https://webfirewood.tistory.com/115)**
+>
+> [[Spring Boot 2.7.0\] Security + Jwt 구현 [1] (velog.io)](https://velog.io/@tjdals9638/Spring-Boot-2.7.0-Security-Jwt-구현-1)
+>
+> [[Spring Security\] 스프링 시큐리티 로그인, 회원가입 예제 - HoeStory (tistory.com)](https://hoestory.tistory.com/30)
+>
+> [Spring Security 적용해보기 (tistory.com)](https://dev-alxndr.tistory.com/4)
+
+
 
 ## XSS [ Cross-site Scripting ]
 
@@ -1233,8 +1592,6 @@ CSRF는 클라이언트의 세션과 쿠키에 저장된 회원 정보를 탈취
 # Spring 특징
 
 > [제어의 역전(Inversion of Control, IoC) 이란? :: Develogs (tistory.com)](https://develogs.tistory.com/19)
->
-> 
 
 
 
