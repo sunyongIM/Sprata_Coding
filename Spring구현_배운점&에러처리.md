@@ -74,6 +74,10 @@ multipartFile 반환하기
 
 
 
+### java에서 Byte[]와 byte[]
+
+[OKKY - 자바 byte와 Byte의 차이점](https://okky.kr/article/408892)
+
 ### byte[]의 길이 문제
 
 com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'image_byte' at row 1
@@ -236,3 +240,25 @@ https://javachoi.tistory.com/263
 
 
 ## S3 사용해보기
+
+
+
+
+
+## N+1 문제
+
+[[JPA\] N+1 문제 원인 및 해결방법 알아보기 — 슬기로운 개발생활 (tistory.com)](https://dev-coco.tistory.com/165)
+
+
+
+## 즉시로딩 VS 지연로딩
+
+[[JPA\] 즉시로딩과 지연로딩 알아보기(FetchType.EAGER, LAZY) — 슬기로운 개발생활 (tistory.com)](https://dev-coco.tistory.com/139)
+
+
+
+## SQL 조인이란?
+
+[조인(SQL Server) - SQL Server | Microsoft Docs](https://docs.microsoft.com/ko-kr/sql/relational-databases/performance/joins?view=sql-server-ver16)
+
+> 조인을 사용하면 **테이블 간의 논리적 관계를 기준으로 둘 이상의 테이블에서 데이터를 검색할 수 있습니다**. 조인은 SQL Server에서 특정 테이블의 데이터를 사용하여 다른 테이블의 행을 선택하는 방법을 나타냅니다.
