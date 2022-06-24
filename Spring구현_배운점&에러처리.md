@@ -262,3 +262,9 @@ https://javachoi.tistory.com/263
 [조인(SQL Server) - SQL Server | Microsoft Docs](https://docs.microsoft.com/ko-kr/sql/relational-databases/performance/joins?view=sql-server-ver16)
 
 > 조인을 사용하면 **테이블 간의 논리적 관계를 기준으로 둘 이상의 테이블에서 데이터를 검색할 수 있습니다**. 조인은 SQL Server에서 특정 테이블의 데이터를 사용하여 다른 테이블의 행을 선택하는 방법을 나타냅니다.
+
+
+
+## WebRTC
+
+https://velog.io/@heejinkim0812/WebRTC%EB%9E%80

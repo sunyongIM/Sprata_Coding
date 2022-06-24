@@ -901,6 +901,8 @@ public void deleteBoard(@PathVariable Long id){
 ## 순환참조
 
 > https://velog.io/@minchae75/Spring-Boot-JPA-%EC%88%9C%ED%99%98-%EC%B0%B8%EC%A1%B0-%ED%95%B4%EA%B2%B0
+>
+> 아예 response용 resDTO를 생성하여 해결
 
 
 
@@ -1099,6 +1101,13 @@ from Member m
 - ORDER BY
 
 ### 조인
+
+[조인(SQL Server) - SQL Server | Microsoft Docs](https://docs.microsoft.com/ko-kr/sql/relational-databases/performance/joins?view=sql-server-ver16)
+
+SQL - 네 가지 유형의 물리적 조인 작업
+( 중첩 루프 조인, 병합 조인, 해시 조인, 적응 조인 )
+
+
 
 - 내부 조인
 
@@ -1385,7 +1394,9 @@ from Member m
 
 
 
+## 무중단 배포
 
+[github action과 aws code deploy를 이용하여 spring boot 배포하기(1) - 해보고나면 별거아니다 (isntyet.github.io)](https://isntyet.github.io/deploy/github-action과-aws-code-deploy를-이용하여-spring-boot-배포하기(1)/)
 
 
 
@@ -1693,7 +1704,7 @@ from Member m
 
     3. Signature
 
-## Spring Security
+# Spring Security
 
 > [Spring Security (tistory.com)](https://iyk2h.tistory.com/158) - 스프링 시큐리티란?
 >
@@ -1707,7 +1718,64 @@ from Member m
 
 
 
-## XSS [ Cross-site Scripting ]
+## **인증 vs 인가** 
+
+> 인증(Authentication) 
+>
+> - 사용자 신원을 확인하는 행위 
+> - ex). 회사 출입을 위한 출입증 확인 혹은 생체정보	 
+
+> 인가(Authorization) 
+>
+> - 사용자 권한을 확인하는 행위
+> - ex). 회사 건물 내 접근 권한 관리
+>   1. 방문자 -> 회의실만 접근 가능
+>   2. 직원 -> 회의실, 사무실 접근 가능
+>   3. 관리자 -> 회의실, 사무실, 서버실, 물품보관실 접근 가능
+
+
+
+## **쿠키와 세션** 
+
+> **HTTP** 
+>
+> - 클라이언트와 서버는 HTTP 통신을 한다.
+>
+> - 클라이언트의 요청을 서버에게 보낸 후 응답을 받을 때까지가 하나의 HTTP 요청
+>
+>   ​		-> HTTP는 상태를 저장하지 않기 때문에 로그인 정보를 저장하지 않는다.
+
+- 즉, 쿠키와 세션은 HTTP에 상태 정보를 유지하기 위해 사용됨.
+
+
+
+> **쿠키** 
+>
+> > 클라이언트에 저장될 목적으로 생성한 작은 정보를 담은 파일 
+>
+> 1. 구성요소
+>    - Name : 쿠키를 구별하는 데 사용되는 키(중복 x)
+>    - Value : 쿠키의 값
+>    - Domain : 쿠키가 저장된 도메인
+>    - Path : 쿠키가 사용되는 경로
+>    - Exprires : 쿠키의 만료기한(만료기한이 지나면 쿠키는 삭제된다.)
+> 2. 사용 예
+>    - 사이트 팝업의 "오늘 다시보지 않기" 정보 저장
+
+
+
+> **세션**
+>
+> > 서버에서 일정시간 동안 클라이언트 상태를 유지하기 위해 사용
+>
+> 1. 동작 설명
+>    - 클라이언트가 서버에게 1번 요청을 할 때 서버에서 '**세션 쿠키**' 라는 것에 유일무이한 '세션 ID'를 부여해 다시 클라이언트로 보냄. 이때 해당 요청을 다시 했을 때 클라이언트가 '세션쿠키'를 넣어 2번 요청을 하면 서버가 가지고 있는 정보가 있어 1번 요청과 같은 클라이언트임을 인지한다.
+> 2. 사용 예
+>    - 로그인 정보 저장
+
+
+
+### XSS [ Cross-site Scripting ]
 
 [저장형 XSS(Stored Cross Site Scripting) 공격과 방어 - Junhyunny’s Devlogs](https://junhyunny.github.io/information/security/spring-mvc/stored-cross-site-scripting/)
 
@@ -1723,21 +1791,21 @@ from Member m
 >
 > 주로 CSRF를 하기 위해서 사용되기 때문에 종종 CSRF와 혼동되는 경우가 있으나, XSS는 자바스크립트를 실행시키는 것이고, CSRF는 특정한 행동을 시키는 것이므로 다르다.
 
-### Stored XSS (저장형 XSS)
+#### Stored XSS (저장형 XSS)
 
 - 보안이 취약한 서버에 해커가 악성 스크립트를 저장함으로써 발생한다.
 
-### Reflected XSS (반사형 XSS)
+#### Reflected XSS (반사형 XSS)
 
 - 해커가 보안이 취약한 사이트를 통해서 악성 스크립트를 넣은 URL을 만들어 일반 사용자에게 스팸 메일로 전달한다.
 
-### DOM 기반 XSS
+#### DOM 기반 XSS
 
 - 보안에 취약한 JavaScript 코드로 DOM 객체를 제어하는 과정에서 발생합니다.
 
 
 
-## XSS 방어방법
+### XSS 방어방법
 
 > **스크립트를 실행시키지 않는 방법을 이용한다**
 
