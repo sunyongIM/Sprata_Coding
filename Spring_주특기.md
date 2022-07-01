@@ -28,11 +28,17 @@
 
 ## DI
 
+> Dependency Injection ( 객체 주입 )
+>
 > [스프링 - 생성자 주입을 사용해야 하는 이유, 필드인젝션이 좋지 않은 이유 (yaboong.github.io)](https://yaboong.github.io/spring/2019/08/29/why-field-injection-is-bad/)
 
 ## IOC
 
+> Inversion Of Controll ( 제어 역전 )
+
 ## AOP
+
+> Aspect Oriented Programming ( 관점 지향 프로그래밍 )
 
 
 
@@ -920,9 +926,15 @@ public void deleteBoard(@PathVariable Long id){
 
 [객체를 기반으로 하는 하이버네이트(Hibernate)의 장단점 (JPA, ORM 정의 포함) : 네이버 블로그 (naver.com)](https://m.blog.naver.com/swoh1227/221479428906)
 
+[[JPA\] Spring Data JPA (tistory.com)](https://dev-gorany.tistory.com/348)
+
 
 
 ## JPQL
+
+[[JPA\] 객체지향 쿼리, JPQL (tistory.com)](https://ict-nroo.tistory.com/116)
+
+[Spring Data JPA(2) - JpaRepository 쿼리 메소드 기능 (tistory.com)](https://ykh6242.tistory.com/entry/Spring-데이터-JPA-쿼리-메소드-기능)
 
 > JPQL의 필요성
 >
@@ -1384,7 +1396,7 @@ SQL - 네 가지 유형의 물리적 조인 작업
 >   ```shell
 >   # 아래 명령어로 미리 pid 값(프로세스 번호)을 본다
 >   ps -ef | grep java
->             
+>                 
 >   # 아래 명령어로 특정 프로세스를 죽인다
 >   kill -9 [pid값]
 >   ```
@@ -1394,9 +1406,68 @@ SQL - 네 가지 유형의 물리적 조인 작업
 
 
 
-## 무중단 배포
+## 배포자동화
+
+**깃허브 액션**
+
+**https://be-developer.tistory.com/51**
+
+**[Github Action, AWS CodeDeploy를 사용하여 자동 배포하기! | 구보현 블로그 (bohyeon-n.github.io)](https://bohyeon-n.github.io/deploy/devops/github_action.html)**
+
+https://zzang9ha.tistory.com/404?category=954133
+
+https://ojy9612.tistory.com/66 - 재영님 블로그
+
+[Github Action과 AWS CodeDeploy를 사용하여 Spring Boot 프로젝트 CI/CD 파이프라인 구축하기 (tistory.com)](https://shinsunyoung.tistory.com/120)
+
+[[SpringBoot,Nginx\] 무중단 배포 (velog.io)](https://velog.io/@eeheaven/SpringBootNginx-무중단-배포)
 
 [github action과 aws code deploy를 이용하여 spring boot 배포하기(1) - 해보고나면 별거아니다 (isntyet.github.io)](https://isntyet.github.io/deploy/github-action과-aws-code-deploy를-이용하여-spring-boot-배포하기(1)/)
+
+**젠킨스**
+
+[[Jenkins\] Jenkins 개념부터 설치, 연동까지 (tistory.com)](https://yeonyeon.tistory.com/56)
+
+
+
+## GitHub Actions
+
+- github action 기본 문법 알아보기
+  - github action를 정의하는 기본 6가지 용어
+    1. `Workflows` : 자동화 하려고 하는 과정들
+       - 한개 또는 여러개의 job으로 구성되며, event에 의해서 시작됩니다.
+       - 빌드, 테스트, 릴리즈, 배포 등의 작업이라고 생각하면 됩니다.
+    2. `Events` : workflow를 trigger되는 행동들
+       - push, pull request, cronjob 등이 있음.
+    3. `Jobs`: 동일한 runner에서 실행하려고하는 여러개의 step의 모임
+    4. `Steps`: job을 구성하는 한개의 커맨드로 action이거나 shell command로 구성됩니다.
+    5. `Actions`: 다른 곳에서 정의된 커맨드의 모음
+    6. `Runner`: Job이 실행되는 환경
+
+
+
+![CI_CD](md-images/CI_CD.png)
+
+
+
+### Jenkins와 GitHub Actions의 차이점
+
+[[CI/CD\] Jenkins 과 GitHub Actions의 개념, 차이점 (tistory.com)](https://choseongho93.tistory.com/295)
+
+
+
+|                           Jenkins                            |                        GitHub Actions                        |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+|                        서버 설치 필요                        |           클라우드가 있으므로, 별도 설치 필요없음            |
+| 작업 또는 작업이 동기화되어 제품을 시장에 배포하는 데 더 많은 시간이 소요 |                     비동기 CI / CD 달성                      |
+| 계정 및 트리거를 기반으로하며 github 이벤트를 준수하지 않는 빌드를 중심으로합니다. | 모든 github 이벤트에 대한 작업을 제공하고 다양한 언어와 프레임 워크를 지원합니다. |
+|        환경 호환성을 위해 도커 이미지에서 실행해야 함        |                       모든 환경과 호환                       |
+| 캐싱 메커니즘을 지원하기 위해 플러그인을 사용할 수 있습니다. |   캐싱이 필요한 경우 자체 캐싱 메커니즘을 작성해야합니다.    |
+|               공유 할 수있는 능력이 없습니다.                |            github 마켓 플레이스를 통해 공유 가능             |
+|           전세계많은 사람들이 이용하여 문서가 다양           |                  젠킨스에 비해 문서가 없음                   |
+|       페이스북, 넥플릭스, 쿠팡, 카페24, 11번가   등...       |               업스테이지 AI, Be pro 회사 등...               |
+
+
 
 
 
@@ -1439,6 +1510,24 @@ SQL - 네 가지 유형의 물리적 조인 작업
   ex) Validation, 회원 패턴 분석을 위한 로그 기록, API 수행시간 저장
 
 ![AOP_module](md-images/AOP_module.png)
+
+
+
+## AOP의 필요성
+
+- 모든 **'핵심기능**'의 Controller 에 '부가기능' 코드를 추가했을 때..
+  - '핵심기능' 이 100개라면??
+    - 100개의 **'핵심기능**' 모두에 동일한 내용의 코드 추가 필요
+  - '핵심기능' 이 나중에 추가된다면?
+    - 항상 '부가기능' 추가를 신경써야 함
+    - '부가기능' 추가를 깜박한다면?
+      - 일부 API 수행시간이 추가되지 않음 → Top5 회원의 신뢰성 이슈
+- **'핵심기능**' 수정 시
+  - 같은 함수 내에 **'핵심기능**'과 '부가기능'이 섞여 있음
+  - **'핵심기능**' 이해를 위해 '부가기능'까지 이해 필요
+- '부가기능'의 변경이 필요하다면??
+  - **'핵심기능**'의 개수만큼 '부가기능'도 수정해 줘야 함
+  - '부가기능' 삭제
 
 
 
@@ -1503,7 +1592,7 @@ SQL - 네 가지 유형의 물리적 조인 작업
      - 포인트컷 Expression 형태
 
        ```bash
-       execution(modifiers-pattern? return-type-pattern declaring-type-pattern? **method-name-pattern(param-pattern)** throws-pattern?)
+       execution(modifiers-pattern? `return-type-pattern` declaring-type-pattern? `method-name-pattern(param-pattern)` throws-pattern?)
        ```
 
        - ? 는 생략 가능
@@ -1527,7 +1616,7 @@ SQL - 네 가지 유형의 물리적 조인 작업
 
        - 클래스명 (패키지명 필요)
        - **com.sparta.springcore.controller.*** - controller 패키지의 모든 클래스에 적용
-       - **com.sparta.springcore.controller..** - controller 패키지 및 하위 패키지의 모든 클
+       - **com.sparta.springcore.controller..** - controller 패키지 및 하위 패키지의 모든 클래스
 
      - **method-name-pattern(param-pattern)**
 
@@ -2036,7 +2125,7 @@ CSRF는 클라이언트의 세션과 쿠키에 저장된 회원 정보를 탈취
 
 
 
-### 협업 시 ES린트 설정 해보기
+### 협업 시 린트 설정 해보기
 
 > 오래된 스웨터의 보푸라기 같은 것을 린트(Lint)라고 부른다. 보푸라기가 많으면 옷이 보기 좋지 않은데 코드에서도 이런 보프라기가 있다. 들여쓰기를 맞추지 않은 경우, 선언한 변수를 사용하지 않은 경우......
 >
@@ -2046,15 +2135,17 @@ CSRF는 클라이언트의 세션과 쿠키에 저장된 회원 정보를 탈취
 
 
 
-### Github Action
-
-> 배포 관련
-
-
-
 ## 도커
 
 > 도커는 EC2과 같은 가상환경
 > mysql 이미지(패키지랑 비슷)
 > 컨테이너(프로젝트와 비슷)를 만들어서
 
+
+
+## 싱글톤 (Singleton)
+
+> 클래스 내에서만 객체를 생성할 수 있다
+
+static private으로 객체를 생성한다 - dependency
+생성된 객체를 하나만 쓸 수 있기 때문에 싱글톤

@@ -1,16 +1,28 @@
+## YAML
+
+```
+원래 YAML은 'YAML은 마크업 언어가 아니다 - YAML Ain't Markup Language' 라는 뜻으로   
+핵심이 문서 마크업이 아닌 데이터 중심에 있다는 것을 보여줍니다.   
+그에 맞게 가독성이 좋으며 문법이 이해하기 수월하도록 작성된 언어입니다.
+```
+
+
+
 int와 Integer
 
 > https://includestdio.tistory.com/1
 
 
 
-자바 Optional 바르게 쓰기
+## Java의 Optional
 
-> [Java Optional 바르게 쓰기 - 뒤태지존의 끄적거림 (homoefficio.github.io)](https://homoefficio.github.io/2019/10/03/Java-Optional-바르게-쓰기/)
+[까다로운 Optional 느낌있게 사용하는 법 (velog.io)](https://velog.io/@nswon/Java8-API-개발자-Optional-그렇게-쓰는거-아닌데)
+
+[Java Optional 바르게 쓰기 - 뒤태지존의 끄적거림 (homoefficio.github.io)](https://homoefficio.github.io/2019/10/03/Java-Optional-바르게-쓰기/)
 
 
 
-S
+## SpringSecurity
 
 [SPRING SECURITY + JWT 회원가입, 로그인 기능 구현 (tistory.com)](https://webfirewood.tistory.com/115)
 
@@ -42,7 +54,7 @@ S
 
 
 
-image 파일 보내고 받기
+## image 파일 보내고 받기
 
 > [Multipart/form-data란? – JungHyun Baek – Developer from South Korea (junghyun100.github.io)](https://junghyun100.github.io/Multipart_form-data/)
 
@@ -67,10 +79,6 @@ multipartFile 변환하기
 multipartFile 반환하기
 
 [명월 일지 :: [Java\] Base64 인코딩, 디코딩하는 방법 (tistory.com)](https://nowonbun.tistory.com/476)
-
-
-
-@RequestHeader를 받아서 token을 확인하나?
 
 
 
@@ -210,9 +218,8 @@ UserInfo userInfo3 = userInfoBuilder
 
 ### 롬복의 @Builder
 
-> 해당 클래스에 어노테이션을 붙여주면 된다.
+> 빌더를 적용할 생성자에 어노테이션을 붙여주면 된다.
 >
-> 조건 - 모든 필드가 생성자에 포함되어 있어야한다
 
 
 
@@ -222,6 +229,63 @@ https://coding-factory.tistory.com/524
 
 > Static 키워드를 통해 생성된 정적멤버들은 Heap영역이 아닌 Static영역에 할당됩니다.
 > Static 영역에 할당된 메모리는 **모든 객체가 공유하여 하나의 멤버를 어디서든지 참조**할 수 있는 장점을 가지지만 Garbage Collector의 관리 영역 밖에 존재하기에 **Static영역에 있는 멤버들은 프로그램의 종료시까지 메모리가 할당된 채로 존재**하게 됩니다. 그렇기에 Static을 너무 남발하게 되면 만들고자 하는 시스템 성능에 악영향을 줄 수 있습니다.
+
+
+
+## Spring 예외처리
+
+https://velog.io/@mooh2jj/%EC%9E%90%EB%B0%94-%EC%98%88%EC%99%B8%EC%B2%98%EB%A6%ACtry-catch-throw-throws
+
+https://jeong-pro.tistory.com/195
+
+[Spring Exception Handling :: 뱀귤 블로그 (tistory.com)](https://bcp0109.tistory.com/303)
+
+
+
+- # 사용할 클래스
+
+  - `ErrorCode` : 핵심. 모든 예외 케이스를 이곳에서 관리함
+  - `CustomException` : 기본적으로 제공되는 Exception 외에 사용
+  - `ErrorResponse` : 사용자에게 JSON 형식으로 보여주기 위해 에러 응답 형식 지정
+  - `GlobalExceptionHandler` : Custom Exception Handler
+    - `@ControllerAdvice` : 프로젝트 전역에서 발생하는 Exception 을 잡기 위한 클래스
+    - `@ExceptionHandler` : 특정 Exception 을 지정해서 별도로 처리해줌
+
+
+
+### @ExceptionHandler
+
+> @Controller, @RestController가 적용된 Bean내에서 발생하는 예외를 잡아서 **하나의 메서드**에서 처리해주는 기능을 한다.
+
+- 주의사항/알아 둘 것
+
+Controller, RestController에만 적용가능하다. (@Service같은 빈에서는 안됨.)
+
+리턴 타입은 자유롭게 해도 된다. (Controller내부에 있는 메서드들은 여러 타입의 response를 할 것이다. 해당 타입과 전혀다른 리턴 타입이어도 상관없다.)
+
+@ExceptionHandler를 등록한 Controller에만 적용된다. 다른 Controller에서 NullPointerException이 발생하더라도 예외를 처리할 수 없다.
+
+메서드의 파라미터로 Exception을 받아왔는데 이것 또한 자유롭게 받아와도 된다.
+
+### @ControllerAdvice
+
+> @ControllerAdvice는 모든 @Controller 즉, **전역에서 발생할 수 있는 예외를 잡아 처리**해주는 annotation이다.
+
+
+
+### @RestControllerAdvice
+
+> @RestController에서 예외가 발생하든 @Controller에서 예외가 발생하든 @ControllerAdvice + @ExceptionHandler 조합으로 다 캐치할 수 있고 @ResponseBody의 필요 여부에 따라 적용하면 된다.
+>
+> 전역의 예외를 잡긴하되 패키지 단위로 제한할 수도있다
+>
+> `@RestControllerAdvice("com.example.demo.login.controller")`
+
+
+
+## Spring의 Response
+
+[ResponseEntity - Spring Boot에서 Response를 만들자 (techcourse.co.kr)](https://tecoble.techcourse.co.kr/post/2021-05-10-response-entity/)
 
 
 
@@ -241,7 +305,7 @@ https://javachoi.tistory.com/263
 
 ## S3 사용해보기
 
-
+https://pearlluck.tistory.com/61
 
 
 
@@ -265,6 +329,122 @@ https://javachoi.tistory.com/263
 
 
 
+## JPQL로 좋아요 개수 순 정렬 기능 구현
+
+```java
+@Query(value = "select b " +
+       "from Board b left join Like l " +
+       "on b = l.boardId " +
+       "group by b._id " +
+       "order by count(l) desc ")
+List<Board> findAllByOrOrderByLikeIdsCount();
+```
+
+하이버네이트로 본 위의 JPQL 쿼리문
+
+```
+Hibernate: 
+    select
+        board0_._id as _id1_0_,
+        board0_.created_at as created_2_0_,
+        board0_.modified_at as modified3_0_,
+        board0_.content as content4_0_,
+        board0_.layout as layout5_0_,
+        board0_.user_id as user_id6_0_ 
+    from
+        board board0_ 
+    left outer join
+        likes like1_ 
+            on (
+                board0_._id=like1_.board_id
+            ) 
+    group by
+        board0_._id 
+    order by
+        count(like1_._id) desc
+```
+
+
+
+## 이메일 인증
+
+[[Spring\] 이메일 인증 구현 (tistory.com)](https://gilssang97.tistory.com/60)
+
+
+
+## 이메일 인증 데이터를 폐기하는 법
+
+https://jessyt.tistory.com/3
+
+정해진 시간이후 테이블을 자동으로 삭제하는 기능을 추가하려면
+
+**@Scheduled**라는 어노테이션을 사용
+
+
+
+### **Spring Batch**
+
+**Spring에서 지원하는 대용량 데이터를 일괄적으로 처리하는 기능이다.**
+
+**schema-mysql.sql 을 통해 Spring Batch Meta 정보 관련 Database table 생성**
+
+
+
+> **Batch는 대용량 데이터를 일괄적으로 처리하는 기능이고 Quartz는 스케쥴링 역할**
+
+
+
 ## WebRTC
 
 https://velog.io/@heejinkim0812/WebRTC%EB%9E%80
+
+
+
+## Random String 생성하는 법
+
+1. ```java
+   int leftLimit = 97; // letter 'a'
+   int rightLimit = 122; // letter 'z'
+   int targetStringLength = 10;
+   Random random = new Random();
+   StringBuilder buffer = new StringBuild(targetStringLength);
+   for (int i = 0; i < targetStringLength; i++) {
+       int randomLimitedInt = leftLimit + (int)
+               (random.nextFloat() * (rightLimit - leftLimit + 1));
+       buffer.append((char) randomLimitedInt);
+   }
+   String generatedString = buffer.toString()
+   System.out.println(generatedString);
+   
+   ```
+
+   > random 클래스를 사용하여 97~122 사이의 난수를 생성하고 char로 변환한 다음 (a~z)
+   > StringBuilder에 하나씩 더해준다 -> 힙 메모리(Heap)에 많은 임시 가비지(Garbage)가 생성돼서 사용을 지양했다. (물론 GC(garbage collection)가 처리해주긴 하지만)
+
+   
+
+2. ```java
+   import java.util.UUID;
+   
+   	String uuid = UUID.randomUUID().toString();
+   	String randomString = uuid.substring(0,8);
+   ```
+
+   > UUID를 생성해 subString으로 잘라쓰는 방법
+
+   
+
+3. ```java
+   import org.apache.commons.lang3.RandomStringUtils;
+   
+   	String randomString = RandomStringUtils.random(8, true, true);
+   ```
+
+   > **apache.commons.lang 을 사용하여 랜덤 스트링 생성**
+   > 쉽고 편하게 만들 수 있다 + 길이, 숫자와 문자여부 등 변경이 자유롭다 -> 이용 Good
+
+
+
+## Jackson 주의할 점
+
+[Spring Request DTO 에 null 값이 들어가는 이유 (Jackson, Lombok) :: 뱀귤 블로그 (tistory.com)](https://bcp0109.tistory.com/309)
