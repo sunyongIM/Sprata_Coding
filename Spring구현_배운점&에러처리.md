@@ -384,6 +384,8 @@ https://jessyt.tistory.com/3
 
 ### **Spring Batch**
 
+https://jessyt.tistory.com/3
+
 **Spring에서 지원하는 대용량 데이터를 일괄적으로 처리하는 기능이다.**
 
 **schema-mysql.sql 을 통해 Spring Batch Meta 정보 관련 Database table 생성**
@@ -391,6 +393,8 @@ https://jessyt.tistory.com/3
 
 
 > **Batch는 대용량 데이터를 일괄적으로 처리하는 기능이고 Quartz는 스케쥴링 역할**
+>
+> schema-mysql.sql 을 통해 Spring Batch **Meta 정보 관련 Database table 생성**
 
 
 
@@ -448,3 +452,29 @@ https://velog.io/@heejinkim0812/WebRTC%EB%9E%80
 ## Jackson 주의할 점
 
 [Spring Request DTO 에 null 값이 들어가는 이유 (Jackson, Lombok) :: 뱀귤 블로그 (tistory.com)](https://bcp0109.tistory.com/309)
+
+
+
+## 소셜 로그인
+
+[소셜로그인기능 구현(1)_그 원리와 절차에 대해 (velog.io)](https://velog.io/@hyunju-song/소셜로그인기능1OAuth)
+
+> 1. 사용자가 소셜로그인 버튼을 누르면, 로그인하고자 하는 소셜의(카카오나 구글) 로그인페이지로 가게된다.
+> 2. 이 때 이 로그인 페이지로 가게 하기 위해, 서비스제공자와 소셜 사이에서의 모종의 상호작용이 일어나게 된다. 이 상호작용을 위해 서비스 제공자는 미리 OAuth라는 서비스를 사용하게 된다. (이에 대해서는 이후에 추가적인 설명을 할 예정)
+> 3. 로그인을 성공하면, 소셜은 사용자의 페이지가 기존에 사용하던 서비스 페이지로 redirect 되도록 해준다.
+
+즉 소셜로그인은, 구글이나 카카오에서 "나"라는 제공자와 "사용자" 사이에서 로그인을 중개해주는 역할을 하는 것이다.
+이 중개자의 역할을 가능하도록 해주는 서비스가 OAuth 이다.
+
+
+
+### curl
+
+https://github.com/gwonsungjun/wiki/blob/master/Linux/Ubuntu/curl.md
+
+> [Client URL]
+
+
+
+## Spring WebClient
+

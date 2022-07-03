@@ -32,9 +32,207 @@
 >
 > [스프링 - 생성자 주입을 사용해야 하는 이유, 필드인젝션이 좋지 않은 이유 (yaboong.github.io)](https://yaboong.github.io/spring/2019/08/29/why-field-injection-is-bad/)
 
-## IOC
+### 의존성 주입 (Dependency Injection)
+
+: 필요한 의존성 객체를 어떻게 주입 받을 것인가
+
+- 종류
+  - (1) **Constructor Injection**
+  - (2) **Field Injection**
+  - (3) **Setter Injection**
+- (1) **Constructor Injection**의 경우,
+  주입 받을 의존성 객체의 원형 **필드에** 보통 **final** 키워드를 붙인다.
+- (2), (3) 의 **Field Injection** 와 **Setter Injection** 의 경우에는,
+  필드에 **final** 키워드를 **붙이지 않는다.**
+- Spring 에서 공식적으로 **권장하는** 의존성 주입 방법은 (1) **Constructor Injection** 이다.
+- 그럼에도 Field Injection 이나 Setter Injection 같은 방법들이 존재하는 이유는
+  간혹 **순환 참조**(**Circular Depencies** or **Circular Reference**) 라는 문제가 발생할 수 있는데
+  이 순환 참조 문제를 Field Injection 이나 Setter Injection로 해결 가능하다.
+
+
+
+## IoC
 
 > Inversion Of Controll ( 제어 역전 )
+>
+> **DI / IOC** 한방에 정리 - [IoC 컨테이너 / BeanFactory / ApplicationContext (velog.io)](https://velog.io/@linger0310/IoC-컨테이너-BeanFactory-ApplicationContext)
+
+
+
+### IoC(Inversion of Control)란?
+
+: 제어권 역전.
+
+**일반적인 제어권 상황**과 **IoC 상황**을 코드로 예를 들어 설명하겠다.
+
+#### (1) 일반적인 제어권
+
+> 객체 의존성에 대한 일반적인 제어권 Example
+
+- 자신이 사용할 의존성 객체를 **직접** 초기화하여 만들어 사용한다.
+  이는 **의존성 객체에 대한 제어권이 자신에게 있다**고 볼 수 있다.
+
+```java
+	class OwnerController{
+		private OwnerRepository owner = new OwnerRepository();
+	}
+```
+
+
+
+#### (2) IoC(Inversion of Control)
+
+> IoC(Inversion of Control) Example
+
+- 자신이 사용할 의존성 객체를 생성자를 통해 **외부로부터** 주입 받는다.
+  **즉, 의존성 객체에 대한 제어권이 자신에게 없는 상황**이고 이를 **제어권이 역전**되었다고 한다.
+  이렇게 외부로부터 의존성 객체를 주입 받는 것을 **DI(Dependency Injection)** 라고 한다.
+
+```java
+class OwnerController {
+	private OwnerRepository owner;
+
+	public OwnerController(OwnerRepository owner) {
+		this.owner = owner;
+	}
+}
+```
+
+
+
+## Bean
+
+> Spring 의 **IoC 컨테이너가 관리하는 자바 객체**를 Bean 이라고 한다.
+
+- 위의 IoC(Inversion of Control)에서
+
+  - **(1) 일반적인 제어권** 의 example 코드 방식으로 생성된 객체는
+       **Bean이 아니다.**
+
+  - **(2) IoC(Inversion of Control)** 의 example 코드 방식으로 생성된 객체가
+       **Bean이다.**
+
+    
+
+- Spring 에서 **의존성 주입(DI, Dependency Injection)**을 받기 위해서는
+  이러한 자바 객체를 IoC 컨테이너에 Spring Bean으로 등록해야 가능하다.
+
+### Bean 등록 방법
+
+#### (1) Component Scanning
+
+- Class에 **@Component**와 관련된 어노테이션을 적용시켜 Bean으로 등록하는 방식
+
+  - 종류
+
+    - **@Component**
+
+    - **@Repository**
+
+    - **@Service**
+
+    - **@Controller**
+
+    - **@Configuration**
+
+    - **etc.**
+
+      
+
+> Component Scanning Example
+
+```java
+@Controller
+public class SampleBeanController {
+
+}
+```
+
+#### (2) 직접 등록
+
+- 일종의 Configuration.java 파일을 생성하여
+  @Configuration 과 @Bean을 사용하여 직접 등록해주는 방식
+
+  
+
+> 직접 등록 Example | SampleBeanConfig.java
+
+```java
+@Configuration
+public class SampleBeanConfig {
+
+	@Bean
+	public SampleBeanController sampleBeanController(){
+		return new SampleBeanController();
+	}
+}
+```
+
+### 등록된 Bean을 어떻게 꺼내어 사용할까?
+
+#### (1) @Autowired 혹은 @Inject
+
+> Example
+
+```java
+	@Autowired
+	private OwnerRepository owners;
+
+	@Autowired
+	private ApplicationContext applicationContext;
+
+	@Autowired
+	private VisitRepository visits;
+
+	@Autowired
+	private PetRepository petRepository;
+```
+
+#### (2) ApplicationContext에서 getBean()으로 직접 꺼내어 사용하기
+
+> Example
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class SampleBeanControllerTest {
+
+	@Autowired
+	ApplicationContext applicationContext;
+
+	// ApplicationContext에 SampleBeanController가 Bean으로 등록되어 있는지
+	// 확인하는 테스트 코드
+	@Test
+	public void testDI() {
+		SampleBeanController bean = applicationContext.getBean(SampleBeanController.class);
+		assertThat(bean).isNotNull();
+	}
+}
+```
+
+
+
+## IoC 컨테이너
+
+- Spring Bean 생성과 Bean들 사이의 관계 설정, 사용, 제거 등의 작업을 담당하는 독립된 공간
+- Spring 에서 IoC를 담당하는 컨테이너는 **BeanFactory**, **ApplicationContext** 두 가지가 있다.
+- 기본적으로 **싱글톤 스코프**로 Bean 을 관리.
+  - 왜 싱글톤 일까?
+    - 매번 클라이언트에서 요청이 들어올 때마다 각 로직을 담당하는 객체들을 새로 생성하는 것은 자원 측면에서 매우 비효율적.
+    - 따라서, 클래스당 하나의 객체만 만들어두고 사용자의 요청을 담당하는 여러 스레드에서 하나의 객체를 공유해 동시에 사용.
+
+
+
+## 1. BeanFactory
+
+- Spring IoC 컨테이너 최상위 인터페이스
+
+## 2. ApplicationContext
+
+- BeanFactory와 그외 여러가지 인터페이스들을 추가로 상속받은 인터페이스.
+- IoC 컨테이너로서의 역할을 하는 **BeanFactory**에 엔터프라이즈 애플리케이션을 개발하는 데 필요한 여러가지 기능을 추가한 것이 **ApplicationContext**다.
+
+
 
 ## AOP
 
@@ -562,23 +760,31 @@ public class BoardService {
 # 데이터 받기
 
 > [[Spring\] @RequestBody, @ModelAttribute, @RequestParam의 차이 - MangKyu's Diary (tistory.com)](https://mangkyu.tistory.com/72)
+>
+> https://tecoble.techcourse.co.kr/post/2021-05-11-requestbody-modelattribute/
 
 **[ RequestBody, ModelAttribute, RequestParam 간단 정리 ]**
 
-- RequetParam
+- RequetParam("`key`")
 
 1개의 HTTP 파라미터를 얻기 위해 사용됨
 필수 여부가 true이기 때문에 반드시 필요한 경우가 아니라면 required=false 설정이 필요함
 
 - RequestBody
 
-Json 형태로 받은 HTTP Body 데이터를 MessageConverter를 통해 변환시킴
-값을 주입하지 않고 변환을 시키므로(엄밀히는 Reflection을 사용하여 할당), 변수들의 생성자나 Setter함수가 없어도 정상적으로 값이 할당됨
+  - @RequestBody를 사용하면 요청 본문의 JSON, XML, Text 등의 데이터가 적합한 HttpMessageConverter를 통해 파싱되어 Java 객체로 **변환** 된다.
+
+  - @RequestBody를 사용할 객체는 필드를 바인딩할 생성자나 setter 메서드가 필요없다.
+    - 다만 **직렬화를 위해 기본 생성자는 필수**다.
+    - 또한 데이터 바인딩을 위한 필드명을 알아내기 위해 **getter나 setter 중 1가지는 정의되어 있어야 한다**.
+
+
 
 - ModelAttribute
-
-multipart/form-data 형태로 받은 HTTP Body 데이터와 HTTP 파라미터들을 Setter를 통해 1대1로 객체에 바인딩시킴
-변환이 아닌 값을 주입시키므로, 변수들의 생성자나 Setter함수가 없으면 변수들이 저장되지 않음                    
+  - multipart/form-data 형태로 받은 HTTP Body 데이터와 HTTP 파라미터들을 Setter를 통해 1대1로 객체에 바인딩시킴
+  - 변환이 아닌 값을 주입시키므로, 변수들의 생성자나 Setter함수가 없으면 변수들이 저장되지 않음
+  - @ModelAttribute 애너테이션의 역할은 클라이언트가 보내는 HTTP 파라미터들을 특정 Java Object에 **바인딩(맵핑)** 하는 것입니다. `/modelattribute?name=req&age=1` 같은 Query String 형태 혹은 요청 본문에 삽입되는 Form 형태의 데이터를 처리합니다.
+  - @RequestBody 예제와 비슷하게 컨트롤러 및 DTO를 작성했습니다. ModelAttributeDto는 RequestBodyDto와 동일한 필드와 생성자 및 Getter 메서드를 가지고 있습니다. 차이점이라고 한다면 Setter가 정의되어 있지 않고, 컨트롤러는 @RequestBody 대신 @ModelAttribute를 사용한 것입니다.
 
 
 
@@ -756,6 +962,14 @@ public void deleteBoard(@PathVariable Long id){
 # JPA 공부
 
 [[배워보자 Spring Data JPA\] JPA 에서 Pageable 을 이용한 페이징과 정렬 (tistory.com)](https://wonit.tistory.com/483)
+
+
+
+## JPA - Update의 과정
+
+https://jessyt.tistory.com/35
+
+
 
 ## JPA - 연관관계 설정
 
@@ -1396,7 +1610,7 @@ SQL - 네 가지 유형의 물리적 조인 작업
 >   ```shell
 >   # 아래 명령어로 미리 pid 값(프로세스 번호)을 본다
 >   ps -ef | grep java
->                 
+>                   
 >   # 아래 명령어로 특정 프로세스를 죽인다
 >   kill -9 [pid값]
 >   ```
