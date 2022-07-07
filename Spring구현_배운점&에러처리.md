@@ -63,6 +63,8 @@ int와 Integer
 ## Form-data
 
 >[HTTP multipart/form-data 란? (velog.io)](https://velog.io/@shin6403/HTTP-multipartform-data-란)
+>
+>[HTTP multipart/form-data 이해하기 | 레나참나 (lena-chamna.netlify.app)](https://lena-chamna.netlify.app/post/http_multipart_form-data/)
 
 
 
@@ -242,6 +244,12 @@ https://jeong-pro.tistory.com/195
 
 
 
+## Spring의 Validation
+
+https://velog.io/@_koiil/SpringBoot-Spring-Validation%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9C%A0%ED%9A%A8%EC%84%B1-%EA%B2%80%EC%A6%9D
+
+
+
 - # 사용할 클래스
 
   - `ErrorCode` : 핵심. 모든 예외 케이스를 이곳에서 관리함
@@ -306,6 +314,20 @@ https://javachoi.tistory.com/263
 ## S3 사용해보기
 
 https://pearlluck.tistory.com/61
+
+
+
+## S3 파일명을 UUID로 한 이유
+
+S3에 저장 시 파일이름을 UUID로 저장했다.
+
+ 첫번째 이유
+
+-  파일명이 중복으로 발생할 수 있다
+
+ 두번째 이유
+
+- 보안적인 (개발용 S3에만 국한) 이유이다. S3가 외부에 모두 오픈된 상태이기 때문에 UUID가 없을 경우 파일 이름을 통해 쉽게 S3에 저장된 파일에 쉽게 접근할 수 있기 때문에, 무분별한 접근을 막을 수 있도록 UUID를 적용하는 것이 좋다.
 
 
 
@@ -398,6 +420,10 @@ https://jessyt.tistory.com/3
 
 
 
+![Spring_Batch_flow](md-images/Spring_Batch_flow.png)
+
+
+
 ## WebRTC
 
 https://velog.io/@heejinkim0812/WebRTC%EB%9E%80
@@ -455,6 +481,14 @@ https://velog.io/@heejinkim0812/WebRTC%EB%9E%80
 
 
 
+## Email Service (SMTP)
+
+[springboot 구글 이메일 gmail 인.. : 네이버블로그 (naver.com)](https://blog.naver.com/ghdalswl77/222739067045)
+
+
+
+
+
 ## 소셜 로그인
 
 [소셜로그인기능 구현(1)_그 원리와 절차에 대해 (velog.io)](https://velog.io/@hyunju-song/소셜로그인기능1OAuth)
@@ -478,3 +512,26 @@ https://github.com/gwonsungjun/wiki/blob/master/Linux/Ubuntu/curl.md
 
 ## Spring WebClient
 
+
+
+## InitBinder & WebDataBinder
+
+[@InitBinder와 WebDataBinder의 쓰임 (tistory.com)](https://live-everyday.tistory.com/m/227)
+
+
+
+## Java 상속
+
+[[Java\] 자바 상속의 특징 - extends, super, 오버라이딩, instanceof, 추상 클래스와 메소드, final (tistory.com)](https://scshim.tistory.com/210)
+
+
+
+## 페이징 처리 - Offset, Cursor
+
+[페이징 처리 - Offset, Cursor (velog.io)](https://velog.io/@suu07/페이징-처리)
+
+
+
+## Redis
+
+레디스는 고성능 키-값 저장소로서 문자열, 리스트, 해시, 셋, 정렬된 셋 형식의 데이터를 지원하는 NoSQL
