@@ -535,3 +535,15 @@ https://github.com/gwonsungjun/wiki/blob/master/Linux/Ubuntu/curl.md
 ## Redis
 
 레디스는 고성능 키-값 저장소로서 문자열, 리스트, 해시, 셋, 정렬된 셋 형식의 데이터를 지원하는 NoSQL
+
+
+
+## Https 배포
+
+[[AWS\] Route53, ELB로 EC2의 웹 서비스 하기 (tistory.com)](https://three-beans.tistory.com/entry/AWS-Route53-ELB로-EC2의-웹-서비스-하기)
+
+
+
+## java 동기 비동기
+
+이메일 인증 광클 어떻게 대처할 것인가?
