@@ -96,20 +96,22 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 > ### 업데이트를 실행할 때, 성공한 응답을 GlobalExceptionHandler로 처리하게 되면 @Transactional이 실행이 되지 않는 문제 발생
 
-- 해결) 성공한 응답은 ResponseEntity를 리턴하게 해결
+### 해결
 
-  > - Exception을 위해 만든 클래스 정리
-  > - ResponseCode => enum으로 HttpStatus와 message를 정리한 클래스
-  > - CustomException => RuntimeException을 상속받고 ResponseCode를 파라미터로 받는 클래스
-  > - HttpResponse => ResponseCode를 파라미터로 받아 ResponseEntity<HttpResponse>로 만들어주는 메서드가 있는 클래스
-  > - GlobalExceptionHandler => @RestControllerAdvice를 사용하여 Controller로 throw되는 모든 CustomException과 이외의 Exception을 ResponseEntity<HttpResponse>로 프론트앤드에 전달하는 역할을 한다
-  >   @ExceptionHandler를 사용한 메서드로 Exception을 종류별로 처리할 수 있다
-  >
-  > > 성공 응답시 data를 주기위하여 Object 타입으로 data를 받는 DataResponseCode 클래스를 만들어 HttpResponse의 메서드가 해당 클래스도 파라미터로 받게 설정
+성공한 응답은 ResponseEntity를 리턴하게 해결
 
-  
+> - Exception을 위해 만든 클래스 정리
+> - ResponseCode => enum으로 HttpStatus와 message를 정리한 클래스
+> - CustomException => RuntimeException을 상속받고 ResponseCode를 파라미터로 받는 클래스
+> - HttpResponse => ResponseCode를 파라미터로 받아 ResponseEntity<HttpResponse>로 만들어주는 메서드가 있는 클래스
+> - GlobalExceptionHandler => @RestControllerAdvice를 사용하여 Controller로 throw되는 모든 CustomException과 이외의 Exception을 ResponseEntity<HttpResponse>로 프론트앤드에 전달하는 역할을 한다
+>   @ExceptionHandler를 사용한 메서드로 Exception을 종류별로 처리할 수 있다
+>
+> > 성공 응답시 data를 주기위하여 Object 타입으로 data를 받는 DataResponseCode 클래스를 만들어 HttpResponse의 메서드가 해당 클래스도 파라미터로 받게 설정
 
-  - Response 코드만 이용하여 RuntimeException을 상속받지 않는 리턴 타입을`ResponseEntity<HttpResponse>`로 설정하여 해결
+
+
+- Response 코드만 이용하여 RuntimeException을 상속받지 않는 리턴 타입을`ResponseEntity<HttpResponse>`로 설정하여 해결
 
 
 
@@ -143,7 +145,9 @@ main.yml
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./application.properties
 ```
 
-해결 - resources 디렉토리에 일단 applications.dev.properties를 추가하여 해결했지만, mvp를 구현하고 난 이후 applications.properties를 ignore하지 않고, 중요한 정보는 다른 곳에서 import받아 사용하는 방식으로 변경할 예정
+### 해결
+
+> resources 디렉토리에 일단 applications.dev.properties를 추가하여 해결했지만, mvp를 구현하고 난 이후 applications.properties를 ignore하지 않고, 중요한 정보는 다른 곳에서 import받아 사용하는 방식으로 변경할 예정
 
 
 
@@ -151,7 +155,7 @@ main.yml
 
 > 2022년 07월 06일
 
-> 하나의 api요청에서 Exception은 몇 가지, 또는 몇 십 가지까지도 생길 수 있다
+> 하나의 api요청에서 Exception은 몇가지, 또는 몇십가지까지도 생길 수 있다
 > 그렇기에, 빠른 Exception의 처리를 위해서 실패 응답에는
 > 가능한 모든 Exception의 이유가 기술되어 있어야 한다고 생각한다.
 >
@@ -171,52 +175,51 @@ main.yml
 
 > 2022년 07월 07일
 
-> 백엔드 팀원 중 한 분이 사정이 있으셔서 하차하게 되었다
-> 그분이 맡으셧던 게시판 기능(물품 관리 - Goods 테이블)을 대신 구현하게 되었는데,
-> 일단 파일을 여러개 받아야 하는데 하나만 받게 처리하셔서
-> Files 테이블을 만들어 Goods 테이블과 일대다 양방향 연관관계를 맺어주었다
->
-> 기능들을 구현한 후 게시판 생성은 잘 작동하는데,
+> 게시판 CRUD 기능들을 구현한 후 게시판 생성은 잘 작동하는데,
 > 게시판 삭제 기능에서 게시판에 포함된 파일들이 S3 서버에서 지워지지 않는것을 확인했다
 >
-> S3 파일의 삭제에 사용하는 DeleteObjectRequest 클래스에서 bucketName과 key를 파라미터로
-> 받는것을 확인하고 fileUrl이 아닌 key인 것에 힌트를 얻어
+> 삭제하는 메서드의 파라미터로 url값을 사용하고 있었는데,
+> S3 파일의 삭제에 사용하는 DeleteObjectRequest 클래스의 파라미터를 확인 해 보니,
+> bucketName과 key라는 변수명의 파라미터를 받았다. 변수명이 fileUrl이 아닌 key인 것에 힌트를 얻어
 > S3 파일의 생성에 쓰였던 PutObjectRequest에서의 key가 그대로 쓰인다는 것을 알았다
+> (UUID와 OriginalFilename을 합친) fileName을 key로 사용하였다
 >
-> 애석하게도 Files 테이블에선 url만을 값으로 받고 있었고, S3Service와 GoodsService에서도 url만을 다뤘다
+> 애석하게도 Files 테이블에선 url만을 값으로 받고 있었고, S3Service와 GoodsService에서도 
+> url(bucketName + ".s3." + region +".amazonaws.com/" + fileName)만을 사용하였기에, url내에 있는 fileName과 bucketName, region을 따로 다룰 수 있게 DB의 테이블을 수정하기로 하였다
 >
-> ![S3_upload_old](md-images/S3_upload_old.png)
+> ![S3_upload_old](md-images/TrobleShooting/S3_upload_old.png)
 >
 > <center>S3Service에서의 return값 `url` => bucketName+".s3.ap-northeast-2.amazonaws.com"+fileName
 >
-> ![Goods_Service_old](md-images/Goods_Service_old.png)
+> ![Goods_Service_old](md-images/TrobleShooting/Goods_Service_old.png)
 >
 > <center>GoodsService에서 goods객체와 fileUrl만을 Files테이블에 저장했다
 >
-> ![Files_old](md-images/Files_old.png)
+> ![Files_old](md-images/TrobleShooting/Files_old.png)
 >
 > <center>Files 테이블의 컬럼들
 >
 > 
->
-> ## 해결
->
+
+
+### 해결
+
 > 해당 url을 분석하여 fileName만을 뽑아내도 되지만, 
 > S3Service에서 값을 나눠서 Map 타입으로 주는 방식을 택했다
 >
-> ![S3_upload_now](md-images/S3_upload_now.png)
->
+> ![S3_upload_now](md-images/TrobleShooting/S3_upload_now.png)
+> 
 > <center>변경한 S3Service => Map 타입으로 각 값들을 전달한다
->
-> ![Goods_Service_now](md-images/Goods_Service_now.png)
+> 
+> ![Goods_Service_now](md-images/TrobleShooting/Goods_Service_now.png)
 >
 > <center>GoodsService에서 bucket, region, fileName을 각각 입력받는다
->
-> ![Files_now](md-images/Files_now.png)
->
-> <center>bucket, region, fileName을 각각 입력받아도 fileUrl은 자동으로 구성된다
->
-> **이로써 바꾼 코드에선 S3에서 파일을 삭제하거나 수정할 때**
+> 
+>![Files_now](md-images/TrobleShooting/Files_now.png)
+> 
+><center>bucket, region, fileName을 각각 입력받아도 fileUrl은 자동으로 구성된다
+> 
+>**이로써 바꾼 코드에선 S3에서 파일을 삭제하거나 수정할 때**
 > **Files.getFileName()으로 key값을 가져올 수 있다**
 
 
@@ -230,7 +233,7 @@ main.yml
 > 특히 게시했던 사진/동영상 파일들을 게시글을 수정할 때, 
 > 프론트엔드에게 url을 받을 일이 많아져서 다시 한 번 로직을 수정하였다
 >
-> ![S3_delete](md-images/S3_delete.png)
+> ![S3_delete](md-images/TrobleShooting/S3_delete.png)
 >
 > <center>삭제 로직에서만 fileName(key)이 필요하므로 삭제시 url에서 fileName을 추출한다
 >
@@ -240,7 +243,7 @@ main.yml
 
 ## 게시판 수정하기
 
-> 2022년 07월 08일 ~ 2022년 07월 10일
+> 2022년 07월 08일 ~ 2022년 07월 11일
 
 > 핵심 구현 => (사진+동영상)이미지 파일 update - 순서 있음 / S3 서버 부하 최소화
 >
@@ -260,16 +263,28 @@ main.yml
 >
 > 이러한 과정을 거치게 된다면 S3서버 및 FE, BE에 부담이 커질 것이다
 >
-> 
->
-> ![GoodsReqDTO](md-images/GoodsReqDTO.png)
+> ![GoodsReqDTO](md-images/TrobleShooting/GoodsReqDTO.png)
 >
 > MultipartFile과 url을 모두 받기 위해 `List<Object>`로 데이터들을 수신하는 DTO를 작성하였다
 >
 > 여기서 생기는 문제는 아직도 명확한 답을 찾지 못하였는데, 프론트에서 api를 호출할 때 url의 리스트 `List<String>` 또는 이미지 파일의 리스트 `List<MultipartFile>`로 보낼때는 `List<Object>`가 잘 작동을 하여 정상적인 로직이 실행되지만,
 >
 > ```
-> 프론트에서 spi를 호출할 때 url과 MultipartFile을 동시에 보내게 된다면 url의 값들을 받지 못하고, MultipartFile의 값만을 리스트로 받는 현상이 있었다
+> 프론트에서 api를 호출할 때 url과 MultipartFile을 동시에 보내게 된다면 url의 값들을 받지 못하고, MultipartFile의 값만을 리스트로 받는 현상이 있었다
 > ```
 >
-> 
+> (@Modelattribute 로 FE의 데이터를 가져올 때 casting 문제가 생기는 것으로 예상됨)
+>
+> 이를 해결하기 위하여 `HashMap<String, Object>`, `클래스 정의`, `수신부분 변경 (@RequestParm 등)`을 시도 해 봤지만 결과는 같았다
+
+### 해결
+
+> 이미지를 Url로 변환시켜주는 (S3에 저장하는) api를 따로 만들었다.
+> FE에서 이미지를 업로드 하는 동시에 위의 api를 호출하면
+> MultipartFile이 아닌 String 타입의 url이 return 되고,
+> 해당 url을 가지고 게시글 수정 api를 호출하는 로직으로 변경하였다
+>
+> 따라서 BE는 List<String>으로 이미지를 request 받을 수 있어 문제를 해결 할 수 있었다
+>
+> 하지만, 이 해결법에는 S3 서버의 데이터 누수가 있을 수 있기 때문에 scheduler의 관리가 필요하다
+

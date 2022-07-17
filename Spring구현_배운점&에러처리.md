@@ -99,6 +99,8 @@ https://helloworld.kurly.com/blog/jpa-uuid-sapjil/
 ## Java 8 변경점
 
 > 면접 단골 질문
+>
+> 람다식, Optional, Generic, 
 
 
 
@@ -230,7 +232,7 @@ UserInfo userInfo3 = userInfoBuilder
 https://coding-factory.tistory.com/524
 
 > Static 키워드를 통해 생성된 정적멤버들은 Heap영역이 아닌 Static영역에 할당됩니다.
-> Static 영역에 할당된 메모리는 **모든 객체가 공유하여 하나의 멤버를 어디서든지 참조**할 수 있는 장점을 가지지만 Garbage Collector의 관리 영역 밖에 존재하기에 **Static영역에 있는 멤버들은 프로그램의 종료시까지 메모리가 할당된 채로 존재**하게 됩니다. 그렇기에 Static을 너무 남발하게 되면 만들고자 하는 시스템 성능에 악영향을 줄 수 있습니다.
+> Static 영역에 할당된 메모리는 **모든 객체가 공유하여 하나의 멤버를 어디서든지 참조**할 수 있는 장점을 가지지만 Garbage Collector의 관리 영역 밖에 존재하기에 **Static 영역에 있는 멤버들은 프로그램의 종료시까지 메모리가 할당된 채로 존재**하게 됩니다. 그렇기에 Static을 너무 남발하게 되면 만들고자 하는 시스템 성능에 악영향을 줄 수 있습니다.
 
 
 
@@ -353,6 +355,8 @@ S3에 저장 시 파일이름을 UUID로 저장했다.
 
 ## JPQL로 좋아요 개수 순 정렬 기능 구현
 
+> 현업에선 QueryDsl을 사용한다고 함, 공부해서 바꿀 것
+
 ```java
 @Query(value = "select b " +
        "from Board b left join Like l " +
@@ -401,6 +405,14 @@ https://jessyt.tistory.com/3
 정해진 시간이후 테이블을 자동으로 삭제하는 기능을 추가하려면
 
 **@Scheduled**라는 어노테이션을 사용
+
+
+
+## Scheduled
+
+[[Spring\] 스케줄러 Cron 사용하기 — Wooncloud Blog (tistory.com)](https://wooncloud.tistory.com/75)
+
+Cron 표현식
 
 
 
@@ -538,6 +550,12 @@ https://github.com/gwonsungjun/wiki/blob/master/Linux/Ubuntu/curl.md
 
 
 
+## EC2 시간 설정
+
+[[AWS\] EC2 Linux 서버 한국표준시간으로 변경하기 (tistory.com)](https://mosei.tistory.com/entry/AWS-EC2-Linux-서버-한국표준시간으로-변경하기?category=1189099)
+
+
+
 ## Https 배포
 
 [[AWS\] Route53, ELB로 EC2의 웹 서비스 하기 (tistory.com)](https://three-beans.tistory.com/entry/AWS-Route53-ELB로-EC2의-웹-서비스-하기)
@@ -547,3 +565,124 @@ https://github.com/gwonsungjun/wiki/blob/master/Linux/Ubuntu/curl.md
 ## java 동기 비동기
 
 이메일 인증 광클 어떻게 대처할 것인가?
+
+
+
+## orphanRemoval
+
+https://tecoble.techcourse.co.kr/post/2021-08-15-jpa-cascadetype-remove-vs-orphanremoval-true/
+
+![orphanRemoval](md-images/orphanRemoval.png)
+
+> ```
+> 보통 1:N 관계 테이블 설정할때 저렇게 옵션을 추가해준다.
+> 자식 엔티티의 변경이 있다면
+> JPA 에서 자식엔티티의 수정은 insert update update delete 순으로 이어지는데
+> 변경된 자식을 먼저 insert 하고
+> 기존의 자식을 NULL로 update 한다.
+> 그리고 orphanRemoval 옵션을 true 로 하면 기존 NULL처리된 자식을 DELETE 한다. 
+> PK(JoinColumn)값이 NULL로 변한 자식은 고아객체라고 하여 연결된 점이 없는 객체이다. 
+> orphanRemoval옵션은 바로 이 고아객체를 삭제해주는 역활을 한다.
+> ```
+>
+> 출처: https://dev-elop.tistory.com/entry/JPA-orphanRemoval-용도 [현직개발자:티스토리]
+
+
+
+- ## 정리
+
+  - #### CascadeType.REMOVE
+
+    - 부모 엔티티를 삭제하면 자식 엔티티가 같이 삭제됨
+    - 하지만 연관관계를 끊는다고 자식 엔티티가 삭제되지는 않음
+      (연관관계를 끊는 것 => 부모 엔티티에서 자식 엔티티 제거)
+
+  - #### orphanRemoval = true
+
+    - 부모 엔티티를 삭제하면 자식 엔티티가 같이 삭제됨
+    - 그리고 연관관계를 끊으면 자식 엔티티가 삭제됨 (고아가 된 엔티티를 삭제)
+      (연관관계를 끊는 것 => 부모 엔티티에서 자식 엔티티 제거)
+
+### 주의점
+
+> 두 케이스 모두 자식 엔티티에 딱 하나의 부모 엔티티가 연관되어 있는 경우에만 사용해야 한다.
+>
+> 예를 들어 Member(자식)을 Team(부모)도 알고 Parent(부모)도 알고 있다면, `CascadeType.REMOVE` 또는 `orphanRemoval = true`를 조심할 필요가 있다. 자식 엔티티를 삭제할 상황이 아닌데도 어느 한쪽의 부모 엔티티를 삭제했거나 부모 엔티티로부터 제거됐다고 자식이 삭제되는 불상사가 일어날 수 있기 때문이다.
+>
+> 그러므로 `@OneToMany`에서 활용할 때 주의를 기울이고, @ManyToMany에서는 활용을 지양하자.
+
+
+
+## 로깅
+
+[[스프링부트 (5)\] Spring Boot 로그 설정(1) - Logback (tistory.com)](https://goddaehee.tistory.com/206)
+
+[Spring Boot 에서 logback 사용하기 | Link Everything](https://linkeverything.github.io/springboot/spring-logging/)
+
+[log4j2, log4j, logback 보안 취약점 조치사항 (tistory.com)](https://oingdaddy.tistory.com/437)
+
+
+
+[[Spring\] AWS EC2에서 Spring Access log, logger log 저장하는 법 :: Gyun's 개발일지 (tistory.com)](https://devlog-wjdrbs96.tistory.com/427)
+
+[Logback 으로 쉽고 편리하게 로그 관리를 해볼까요? ⚙️ (techcourse.co.kr)](https://tecoble.techcourse.co.kr/post/2021-08-07-logback-tutorial/)
+
+[[Spring\] 스프링 부트에서 로그(Log) 사용하기 - Logback (Sync, AsyncAppender) (tistory.com)](https://loosie.tistory.com/829)
+
+
+
+## Ubuntu에서 로그파일 확인하기
+
+[로그 명령어와 grep 옵션 (tistory.com)](https://abbo.tistory.com/53)
+
+
+
+## application.properties => profiles 설정
+
+[spring boot 에서 profile 사용한 application.properties 로딩 (gradle build) | 개발자님 cs 드세요 (lejewk.github.io)](https://lejewk.github.io/springboot-gradle-spring-profiles-active/)
+
+
+
+## 서버 부하테스트
+
+> JMeter사용
+
+[[JMeter\] 제이미터 사용방법 (tistory.com)](https://mosei.tistory.com/entry/JMeter-제이미터-사용방법)
+
+
+
+## DBMS 공부
+
+[[Database\] 인덱스(index)란? - MangKyu's Diary (tistory.com)](https://mangkyu.tistory.com/96)
+
+[컬럼형 DB는 왜 빠른가 – DATA ON-AIR (dataonair.or.kr)](https://dataonair.or.kr/db-tech-reference/d-lounge/expert-column/?mod=document&uid=52606)
+
+> 컬럼기반 / 로우기반
+
+![column_img_541](md-images/column_img_541.jpg)
+
+
+
+**컬럼기반시스템**
+
+- 데이터중에서 **많은 양의 데이터를 집합적으로 분석하거나 많은 컬럼 중에서 분석하려는 몇가지 컬럼에 대해 처리하는 환경**에서 유리
+- 한번에 모든 로우를 변경하지 않는, 즉 다른 컬럼에게 영향을 주지 않고 **특정 컬럼 값을 대체할 때 유리**
+
+
+
+**로우기반시스템**
+
+- **한 로우의 여러 컬럼을 동시에 작업할 때** 사용. 이때 로우의 길이가 짧고 모든 로우를 해당 디스크에서 한번에 읽어 올 수 있는 구조일수록 효율은 우수
+- **모든 컬럼의 값을 동시에 입력**해야 할 때 더 효율적. 이 때는 동일한 디스크 블록에 한꺼번에 쓰일 수 있음
+
+
+
+## 공부
+
+elk
+
+Elastic search
+
+logstash
+
+kibana
