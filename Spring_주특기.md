@@ -151,6 +151,14 @@
 
 
 
+## super, super()
+
+[java. super와 super() 완벽하게 이해하기 (velog.io)](https://velog.io/@rhdmstj17/java.-super와-super-완벽하게-이해하기)
+
+
+
+
+
 # 스프링
 
 > 디자인 패턴
@@ -158,6 +166,79 @@
 > https://velog.io/@sangmin7648/Spring%EC%9D%98-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4%EB%93%A4
 
 
+
+- 자신이 상속받은 부모를 **가리키는** 참조 변수 **super**
+
+  ```java
+      // 예제 1
+      class Object{
+      	int a;
+      }
+      
+      class A extends Object{
+      	int a;
+      }
+      
+      public static void main(String args[]){
+      	A ins = new A();
+          ins.a=2 // 여기서 a는 A의 a. 즉, 자식의 변수이다
+          // 만약 자식에게 a라는 변수가 없었다면 부모의 a를 가리켰을 것이다.
+          // 여기서 자식 a가 아닌 부모의 a로 접근하고 싶다면?
+          
+          ins.super.a = 20; // 이렇게 super라는 참조 변수를 사용해서 부모의 a에 접근할 수 있다
+      }
+      // 위와 같은 이유로 자바에서는 다중 상속이 불가능하다 (상속의 모호성)
+  ```
+
+  
+
+- 자신이 상속받은 **부모의 생성자를 호출**하는 메소드 **super()**
+
+  > 자식클래스가 인스턴스를 생성하면, 인스턴스 안에는 자식 클래스의 고유 멤버 뿐만 아니라 부모 클래스의 모든 멤버까지 포함되어있다.
+  >
+  > 하지만 **상속에서의 생성자는 상속되지 않는 유일한 멤버함수**이다. 따라서 부모클래스의 멤버를 초기화하기 위해선, 당연히 부모클래스의 생성자를 호출해야할 것이다. 즉, **자식클래스 생성자를 호출할 때 부모클래스 생성자도 동시에 호출**해야함. (정확히 말하면 부모 생성자가 먼저 실행됨)
+  >
+  > 그렇다면 자식 클래스 생성자 호출 할 때 super()를 같이 쓰면 되는구나! 라고 생각하게 되지만, ***자바 컴파일러가 자동*으로 super() 메소드를 추가**해줌
+  >
+  > but, **부모클래스에 기본 생성자가 아닌 매개변수를 가지는 생성자가 있다면(=부모클래스에서 생성자가 오버로딩되면) 자동으로 추가되지 않음 (=묵시적 제공을 하지 않음)** => 이럴 때 super() 사용
+
+  ```java
+  class Parent{
+      int a;
+      Parent(int n){a=n;};
+  }
+  
+  class Child extends Parent(){
+       int b;
+       Child(){
+           super()		//부모클래스에 기본 생성자가 존재하지 않기 때문에 에러가 생긴다
+           b=20;
+       }
+   }
+  ```
+
+  해결법 1 - 부모클래스에 기본생성자 생성
+
+  해결법 2 - 오버로딩된 생성자에 맞춰 super()의 인자를 맞춰줌 (합리적 해결)
+
+  ```java
+  class Parent{
+      int a;
+      Parent(int n){a=n;};
+  }
+  
+  class Child extends Parent(){
+      int b;
+      Child(){
+          super(40);
+          b=20;
+      }
+  }
+  ```
+
+  
+
+  
 
 
 
@@ -370,6 +451,8 @@ public class SampleBeanControllerTest {
 
 
 ## AOP
+
+[[Spring AOP\] 간단한 AOP 적용 예제 (Logging) (velog.io)](https://velog.io/@dhk22/Spring-AOP-간단한-AOP-적용-예제-Logging)
 
 > Aspect Oriented Programming ( 관점 지향 프로그래밍 )
 
@@ -1285,6 +1368,8 @@ https://jessyt.tistory.com/35
 
 [Spring Data JPA(2) - JpaRepository 쿼리 메소드 기능 (tistory.com)](https://ykh6242.tistory.com/entry/Spring-데이터-JPA-쿼리-메소드-기능)
 
+[[JPA\] @Query, 직접 쿼리 작성 (tistory.com)](https://jforj.tistory.com/90)
+
 > JPQL의 필요성
 >
 > JPA를 사용하면 엔티티 객체를 중심으로 개발할 수 있다
@@ -1745,7 +1830,7 @@ SQL - 네 가지 유형의 물리적 조인 작업
 >   ```shell
 >   # 아래 명령어로 미리 pid 값(프로세스 번호)을 본다
 >   ps -ef | grep java
->                   
+>                     
 >   # 아래 명령어로 특정 프로세스를 죽인다
 >   kill -9 [pid값]
 >   ```

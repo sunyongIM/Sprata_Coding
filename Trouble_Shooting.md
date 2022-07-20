@@ -65,6 +65,8 @@ import java.util.UUID;
 
 3. ✅ **apache.commons.lang 을 사용하여 랜덤 스트링 생성** ✅ **→** 쉽고 편하게 만들 수 있다 + 길이, 숫자와 문자여부 등 변경이 자유롭다
 
+> StringBuilder를 사용해서 garbage가 생기는 라이브러리인지 알아볼 것
+
 ```java
 import org.apache.commons.lang3.RandomStringUtils;
 
