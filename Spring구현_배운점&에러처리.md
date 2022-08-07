@@ -317,11 +317,13 @@ https://javachoi.tistory.com/263
 
 https://pearlluck.tistory.com/61
 
+[AWS S3 (pkch.dev)](https://blog.pkch.dev/89)
+
 
 
 ## S3 파일명을 UUID로 한 이유
 
-S3에 저장 시 파일이름을 UUID로 저장했다.
+S3에 저장 시 파일이름을 UUID + 파일명으로 저장했다.
 
  첫번째 이유
 
@@ -329,7 +331,7 @@ S3에 저장 시 파일이름을 UUID로 저장했다.
 
  두번째 이유
 
-- 보안적인 (개발용 S3에만 국한) 이유이다. S3가 외부에 모두 오픈된 상태이기 때문에 UUID가 없을 경우 파일 이름을 통해 쉽게 S3에 저장된 파일에 쉽게 접근할 수 있기 때문에, 무분별한 접근을 막을 수 있도록 UUID를 적용하는 것이 좋다.
+- 보안적인 (개발용 S3에만 국한) 이유이다. S3가 외부에 모두 오픈된 상태여서, UUID가 없을 경우 파일 이름을 통해 쉽게 S3에 저장된 파일에 쉽게 접근할 수 있기 때문에, 무분별한 접근을 막을 수 있도록 UUID를 적용하는 것이 좋다.
 
 
 
@@ -389,6 +391,22 @@ Hibernate:
     order by
         count(like1_._id) desc
 ```
+
+
+
+## QueryDsl
+
+[우아한 형제들의 Querydsl 사용법 (velog.io)](https://velog.io/@youngerjesus/우아한-형제들의-Querydsl-활용법)
+
+[Spring Boot에 QueryDSL을 사용해보자 (techcourse.co.kr)](https://tecoble.techcourse.co.kr/post/2021-08-08-basic-querydsl/) - querydsl 설정
+
+[[querydsl\] queryDsl 기본 문법 정리 - fetch, sort, paging, aggregation (tistory.com)](https://devkingdom.tistory.com/243) - 문법
+
+[Querydsl - Spring Data JPA에서 제공하는 페이징 활용 :: IT 개발자들의 울타리 (tistory.com)](https://jddng.tistory.com/345) - paging
+
+[Querydsl - 동적 쿼리(Dynamic SQL) 사용하기 ! (tistory.com)](https://jaehoney.tistory.com/185) - 문법
+
+[힘차게, 열심히 공대생 :: [Spring\] 스프링 부트 JPA 페이징 성능 개선 - querydsl 페이지네이션(오프셋 페이징, 커서 페이징) (tistory.com)](https://thalals.tistory.com/298)
 
 
 
@@ -562,6 +580,12 @@ https://github.com/gwonsungjun/wiki/blob/master/Linux/Ubuntu/curl.md
 
 
 
+## SSL 인증서
+
+[SSL(Secure Sockets Layer)이란 무엇입니까? | Cloudflare](https://www.cloudflare.com/ko-kr/learning/ssl/what-is-ssl/)
+
+
+
 ## java 동기 비동기
 
 이메일 인증 광클 어떻게 대처할 것인가?
@@ -674,6 +698,99 @@ https://tecoble.techcourse.co.kr/post/2021-08-15-jpa-cascadetype-remove-vs-orpha
 
 - **한 로우의 여러 컬럼을 동시에 작업할 때** 사용. 이때 로우의 길이가 짧고 모든 로우를 해당 디스크에서 한번에 읽어 올 수 있는 구조일수록 효율은 우수
 - **모든 컬럼의 값을 동시에 입력**해야 할 때 더 효율적. 이 때는 동일한 디스크 블록에 한꺼번에 쓰일 수 있음
+
+
+
+## @기본생성자 접근레벨
+
+[[JPA\] Entity Class의 @NoargsConstructor (access = AccessLevel.PROTECTED) (tistory.com)](https://erjuer.tistory.com/106)
+
+`@NoArgsConstructor(access = AccessLevel.PROTECTED)`
+**FetchType.EAGER와 FetchType.LAZY** 그리고 **프록시**와 관련 있다
+LAZY방식일때, 실제 엔티티가 아닌 프록시를 사용하기 때문에 PROTECTED를 사용한다.
+(PUBLIC과 달리 Entity 외부 접근을 차단)
+
+
+
+## OneToOne 자동쿼리
+
+[JPA @OneToOne은 FetchType.LAZY가 안 먹힐 수 있다? (tistory.com)](https://jeong-pro.tistory.com/249)
+
+
+
+### 분산락 (서버가 여러대일 때 scheduler가 작동되면 여러 문제가 생김)
+
+https://hyperconnect.github.io/2019/11/15/redis-distributed-lock-1.html
+
+
+
+### N+1문제 해결
+
+[JPA 모든 N+1 발생 케이스과 해결책 (velog.io)](https://velog.io/@jinyoungchoi95/JPA-모든-N1-발생-케이스과-해결책)
+
+default batch fetch size
+
+
+
+# Redis이용
+
+[[Redis\] 우분투에 Redis 설치/접속/사용하기 (tistory.com)](https://hayden-archive.tistory.com/429)
+
+[환상(장)의 (ElastiCache + Spring Session + Spring Security) Memory Leak (velog.io)](https://velog.io/@betalabs/환상의-조합ElastiCache-Spring-Session-Spring-Security-Memory-Leak)
+
+
+
+## 동시성 문제 해결 - 분산락
+
+[레디스와 분산 락(1/2) - 레디스를 활용한 분산 락과 안전하고 빠른 락의 구현 | Hyperconnect Tech Blog](https://hyperconnect.github.io/2019/11/15/redis-distributed-lock-1.html)
+
+[Redisson 분산락을 이용한 동시성 제어 (velog.io)](https://velog.io/@hgs-study/redisson-distributed-lock)
+
+[분산 락을 사용하여, 동시성 문제 해결하기 (tistory.com)](https://hyos-dev-log.tistory.com/m/34)
+
+
+
+## 캐싱
+
+[SpringBoot에서 Redis 캐시를 사용하기 - Woolog (wool-dev.com)](https://www.wool-dev.com/backend-engineering/spring/springboot-redis-cache)
+
+[Spring에서 어노테이션을 이용해 cache 적용하기 | Yoon Sung's Blog (unluckyjung.github.io)](https://unluckyjung.github.io/spring/kotlin/2022/07/31/srping-cache/)
+
+[[#2\] Redis 캐시를 통해 읽기 성능 향상하기 (tistory.com)](https://souljit2.tistory.com/72)
+
+
+
+**[Spring Boot DevTools 클래스로더 이슈 (brunch.co.kr)](https://brunch.co.kr/@springboot/212)**
+
+[[Database\] 캐싱과 캐싱 전략에 대해 알아보자 (tistory.com)](https://loosie.tistory.com/800)
+
+[[Spring 레퍼런스\] 28장 캐시 추상화 :: Outsider's Dev Story](https://blog.outsider.ne.kr/1094)
+
+
+
+## SpEL [ Spring Expression Language ]
+
+[Spring Expression Language(SpEL) 에 대해 공부하며 끄적이는 장소 🐶 (devwithpug.github.io)](https://devwithpug.github.io/spring/spring-spel/)
+
+
+
+## Pub/Sub
+
+> **Publish / Subscribe ( 발행 / 구독 )**
+
+[pub/sub 이해하기 (JS 예시) (tistory.com)](https://fierycoding.tistory.com/83)
+
+
+
+## TransactionalEventListener
+
+트렌젝션을 컨트롤 하고 싶을 때 사용
+
+
+
+## Redis를 이용한 caching
+
+[LocalDateTime Jackson 직렬화 오류, 두 가지 해결 방법 (tistory.com)](https://wildeveloperetrain.tistory.com/147)
 
 
 
