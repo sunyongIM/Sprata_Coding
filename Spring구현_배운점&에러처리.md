@@ -794,6 +794,24 @@ default batch fetch size
 
 
 
+## 스토리지란?
+
+[스토리지란? DAS란? / NAS란? / SAN 이란? 차이점? (tistory.com)](https://cheershennah.tistory.com/168)
+
+[SAN vs. NAS vs. Object Storage (quobyte.com)](https://www.quobyte.com/storage-explained/san-nas-object-storage) - S3의 저장형태 : Object
+
+> ## What is Object Storage?
+>
+> Now enters the new kid on the block - object storage. Object storage, also known as object-based storage, is the last category of enterprise storage. It is a data storage strategy that sections data into distinct units or objects and stores them in isolated buckets with all relevant metadata and a custom identifier. Object storage has a flat namespace, as opposed to file systems, or a NAS, which have a hierarchical folder structure. Since Amazon invented it to provide cost-effective storage for large amounts of data, the Amazon product name S3 is used synonymously with the term object storage.
+>
+> There are two main differences between object storage and both SAN and NAS. The first difference is consistency. Both SAN and NAS provide strong consistency, so when you write to a file or block, you have the guarantee that the next read will return the latest data you wrote to the file or block. This consistency model is very intuitive, and most applications rely on it. On the other hand, object storage has very relaxed consistency guarantees (also called eventual consistency), which in reality means that you have no guarantees. Your read might return any value previously written to the object, so applications have to be able to cope with this; therefore, object storage is mainly used for write-once data or archival only. You can find out more about the [differences between file and object here](https://www.quobyte.com/storage-explained/file-vs-object-storage).
+>
+> The second major difference is protocol. Object storage is accessed via the HTTP protocol - the same protocol your web browser uses to request the page you are reading right now. This makes it easy to access object storage from a variety of applications. However, HTTP was never designed for speed or efficiency, whereas SAN and NAS protocols are all about performance.
+
+
+
+
+
 ## 공부
 
 elk
