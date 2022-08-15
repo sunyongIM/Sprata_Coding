@@ -742,6 +742,8 @@ default batch fetch size
 
 ## 동시성 문제 해결 - 분산락
 
+[다중 서버 환경에서 스케줄러 락 - HanghaeE5/Back-end Wiki (github-wiki-see.page)](https://github-wiki-see.page/m/HanghaeE5/Back-end/wiki/다중-서버-환경에서-스케줄러-락)
+
 [레디스와 분산 락(1/2) - 레디스를 활용한 분산 락과 안전하고 빠른 락의 구현 | Hyperconnect Tech Blog](https://hyperconnect.github.io/2019/11/15/redis-distributed-lock-1.html)
 
 [Redisson 분산락을 이용한 동시성 제어 (velog.io)](https://velog.io/@hgs-study/redisson-distributed-lock)
