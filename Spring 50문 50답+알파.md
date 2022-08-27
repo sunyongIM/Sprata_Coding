@@ -20,13 +20,19 @@ Starter을 통한 dependency 자동화, XML설정 필요없음
 
 ## 3) Spring Web MVC의 Dispatcher Servlet의 동작원리는?
 
-1. 클라이언트에서 Request
-2. DispatcherServlet에서 해당 Request에 맞는 Controller로 request를 보내줌(HandlerMapping에서 매핑한 컨트롤러 검색)
-3. Controller에서 클라이언트의 요청을 처리하고 결과를 출력할 ModelAndView객체 를 생성하여 DispathcerServlet으로 리턴
-4. View 이름을 토대로 View Resolver에서 처리 view를 검색
-5. 처리 결과를 View에 송신
-6. 처리 결과가 포함된 View를 DispathcerServlet에 송신
-7. DispatcherServlet에서 클라이언트로 최종결과 Response
+[Spring, @Controller @RestController 차이 - HYEMI’s shoveling blog (devham76.github.io)](https://devham76.github.io/spring/Spring-controllerRestController/)
+
+### @Controller의 실행 흐름
+
+Client -> Request -> Dispatcher Servlet -> Handler Mapping -> **Controller** -> View -> Dispatcher Servlet -> Response -> Client
+
+### @ResponseBody의 실행 흐름
+
+Client -> Request -> Dispatcher Servlet -> Handler Mapping -> **Controller (ResponseBody)** -> Response -> Client
+
+### @RestController의 실행 흐름
+
+Client -> HTTP Request -> Dispatcher Servlet -> Handler Mapping -> **RestController (자동 ResponseBody 추가)** -> HTTP Response -> Client
 
 
 
@@ -680,13 +686,19 @@ aws S3 에 접근하는 권한 - im으로 풀 접근
 
 ### 스프링의 동작 방식
 
- - 디스패처 서블릿  controller와 restcontroller
+- 디스패처 서블릿  controller와 restcontroller
 
 ### 빈과 객체
 
+- 빈은 스프링 컨테이너에서 관리하는 싱글톤 객체
+
 ### ioc컨테이너의 역할
 
-### aop ioc컨테이너
+- 빈 관리해준다
+
+### aop, di, ioc
+
+
 
 ### static
 
@@ -699,3 +711,35 @@ aws S3 에 접근하는 권한 - im으로 풀 접근
 - hashmap, hashset(집합) - db에서 가져올때 중복을 제거
 
 ### 프로세스와 스레드
+
+
+
+## java collection은 어떤 특징이 있는지
+
+- list와 set 인터페이스로 되어있고 자바의 모든 자료구조는 list, set, map 인터페이스도 되어있음
+
+
+
+# 객체지향의 4대 특성
+
+## 캡슐화
+
+비슷한 역할을 하는 속성과 메소드들을 하나의 클래스로 모은것을 캡슐화 라고 한다. 캡슐화에 속한 개념으로 정보 은닉이라는것이 있는데, 캡슐 내부의 로직이나 변수들을 감추고 외부에는 기능(api)만을 제공하는것을 의미한다.
+
+
+
+## 상속
+
+상속이란 클래스를 재사용 하는것이다. 상위 클래스를 하위 클래스에서 상속 받게 되면 상위 클래스의 멤버변수나 메소드를 그대로 물려 받을 수 있다. 상속이 있기 때문에 코드를 재활용할 수 있고 그렇기 때문에 생산성이 높고 유지보수 하기가 좋다. 
+
+
+
+## 추상화
+
+추상화라는것은, 어떤 실체로부터 공통적인 부분이나 관심 있는 특성들만 한곳에 모은것을 의미한다. 예를들어서, 지구를 본따 만든 지구본을 예로 들 수 있다. 지구본은 실제 지구로 부터 관심 있는 특성들(대륙의 위치, 위도,경도)만 뽑아서 만든것이다. 지구를 추상화해서 지구본을 만들었다.객체지향에서의 추상화는 어떤 하위클래스들에 존재하는 공통적인 메소드를 인터페이스로 정의하는것을 예로 들 수 있다.
+
+
+
+## 다형성
+
+다형성은, 같은 모양의 함수가 상황에 따라 다르게 동작 하는것을 의미한다. 오버로딩과 오버라이딩이 있는데, 오버로딩이란것은 함수의 이름은 같으나 함수의 매개변수 숫자, 타입등을 달리해서 다르게 사용하는것을 의미하고, 오버라이딩은 상위 클래스의 메소드를 하위 클래스에서 똑같은 이름으로 재정의 하는것을 의미한다.(덮어씌우기) 이렇게 되면, c++의 경우에는 상위 클래스 타입 변수에 하위 클래스를 담은 상태에서 메소드를 호출하면 상위 클래스의 메소드가 호출되고, 하위 클래스 타입 변수에 하위 클래스를 담으면 하위 클래스의 메소드가 호출된다. 즉, 메소드의 이름은 똑같은데, 상황(상위 클래스의 참조 변수냐 하위 클래스의 참조 변수냐)에 따라 호출 되는 메소드가 다른것이다.
