@@ -812,6 +812,10 @@ default batch fetch size
 
 
 
+## Integer == Integer 에러
+
+[Java의 Integer, int 숫자 비교의 주의사항 (tistory.com)](https://marobiana.tistory.com/130)
+
 
 
 ## 공부
