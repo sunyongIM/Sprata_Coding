@@ -818,6 +818,12 @@ default batch fetch size
 
 
 
+## @Cacheable 동일 클래스 내부 메서드 호출시 미동작 원인 및 해결
+
+https://ifuwanna.tistory.com/202
+
+
+
 ## 공부
 
 elk
