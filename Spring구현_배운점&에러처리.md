@@ -100,7 +100,7 @@ https://helloworld.kurly.com/blog/jpa-uuid-sapjil/
 
 > 면접 단골 질문
 >
-> 람다식, Optional, Generic, 
+> 람다식, Optional, Generic, Stream
 
 
 
@@ -227,9 +227,27 @@ UserInfo userInfo3 = userInfoBuilder
 
 
 
+## Java의 메모리구조
+
+[[Java\] 메모리 구조 메소드(Method), 스택(Stack), 힙(Heap) 영역에 대하여 (tistory.com)](https://coding-factory.tistory.com/830)
+
+![Java_Memory](md-images/Java_Memory.png)
+
+> 멀티 스레드에서 메모리 영역을 살펴보자면, **메소드 영역과 힙 영역은 모든 스레드가 같이 공유**하는데 반해 **스택의 경우에는 각 스레드별로 하나씩 생성**되어집니다. 이러한 특성으로 각 스레드마다 **스택 메모리는 다른 스레드에서 접근이 불가능**한 반면에 **Method Area와 Heap Area는 모든 스레드에서 접근이 가능하고 프로그램의 시작부터 종료 될 때까지 메모리에 남아 프로그램이 실행되고 있다면 어디서든지 사용이 가능**합니다. 이것이 전역변수는 어디서든 접근할 수 있고, Heap 영역의 객체를 주기적으로 삭제해주어야 하는 이유가 됩니다. 
+
+
+
 ### static - 정적 선언 사용
 
 https://coding-factory.tistory.com/524
+
+[17171771 :: JAVA8 이후의 heap 메모리 구조와 GC 알고리즘 (tistory.com)](https://1-7171771.tistory.com/140)
+
+![Heap_Memory](md-images/Heap_Memory.png)
+
+*(Permanent 영역의 경우 Java8부터 Metaspace 영역으로 변경되었다.)*
+
+
 
 > Static 키워드를 통해 생성된 정적멤버들은 Heap영역이 아닌 Static영역에 할당됩니다.
 > Static 영역에 할당된 메모리는 **모든 객체가 공유하여 하나의 멤버를 어디서든지 참조**할 수 있는 장점을 가지지만 Garbage Collector의 관리 영역 밖에 존재하기에 **Static 영역에 있는 멤버들은 프로그램의 종료시까지 메모리가 할당된 채로 존재**하게 됩니다. 그렇기에 Static을 너무 남발하게 되면 만들고자 하는 시스템 성능에 악영향을 줄 수 있습니다.
@@ -796,6 +814,16 @@ default batch fetch size
 
 
 
+# 찾아 본 것들
+
+
+
+## 스프링 첫 요청이 처리되는데 오래걸리는 이유
+
+https://mangkyu.tistory.com/232
+
+
+
 ## 스토리지란?
 
 [스토리지란? DAS란? / NAS란? / SAN 이란? 차이점? (tistory.com)](https://cheershennah.tistory.com/168)
@@ -821,6 +849,20 @@ default batch fetch size
 ## @Cacheable 동일 클래스 내부 메서드 호출시 미동작 원인 및 해결
 
 https://ifuwanna.tistory.com/202
+
+
+
+## Filter, Interceptor, AOP
+
+[[카카오 면접\] Spring Filter, Interceptor, AOP (baek-kim-dev.site)](https://baek-kim-dev.site/61)
+
+
+
+### 필터를 빈으로 등록가능
+
+[[Spring\] 필터(Filter)가 스프링 빈 등록과 주입이 가능한 이유(DelegatingFilterProxy의 등장) - (2) - MangKyu's Diary (tistory.com)](https://mangkyu.tistory.com/221)
+
+
 
 
 

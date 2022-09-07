@@ -649,6 +649,8 @@ ref) https://mangkyu.tistory.com/118
 
 ## 46) 메모리에서 힙영역과 스택영역은 무엇인가?
 
+[[Java\] 자바의 메모리 구조 · Challengist (shinjekim.github.io)](https://shinjekim.github.io/java/2020/01/06/자바의-메모리-구조/)
+
 ![힙영역과 스택영역](md-images/%ED%9E%99%EC%98%81%EC%97%AD%EA%B3%BC%20%EC%8A%A4%ED%83%9D%EC%98%81%EC%97%AD.png)
 
 > 💡 **Stack 영역**
@@ -762,6 +764,8 @@ IoC 컨테이너
  - 스태틱 메모리, 스택 메모리, 힙 메모리
 
 ### overriding overloading의 차이
+
+
 
 ### 중복을 제거하는 방법
 
