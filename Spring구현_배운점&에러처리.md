@@ -870,6 +870,97 @@ https://ifuwanna.tistory.com/202
 
 
 
+### Custom Validation
+
+#### Validator
+
+`public interface ConstraintValidator<A extends Annotation, T>` 를 상속받아 구현
+
+```java
+public class PriceCurrencyValidator implements ConstraintValidator<CustomValidation, BookReqDTO> {
+
+    @Override
+    public void initialize(CustomValidation constraintAnnotation) {
+    }
+
+    @Override
+    public boolean isValid(BookReqDTO bookReqDTO, ConstraintValidatorContext context) {
+        if (bookReqDTO.getPrice() == null && bookReqDTO.getCurrency() == null || bookReqDTO.getPrice() != null && bookReqDTO.getCurrency() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+```
+
+
+
+#### CustomValidation 어노테이션 생성
+
+```java
+@Constraint(validatedBy = PriceCurrencyValidator.class)
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CustomValidation {
+    String message() default "통화는 가격이 존재하는 경우 필수값이며, 아닌 경우는 존재하지 않아야함.";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+
+}
+```
+
+
+
+### DTO내의 DTO Validation하기
+
+Controller에서 ResponseBody를 받을 때 @Valid 해주는 것과 별도로 DTO에도 @Valid 처리를 해줘야 함
+
+```java
+@RestController
+@Api(tags = "저자-도서 등록 API")
+@RequestMapping("/api/register")
+public class RegisterController {
+
+    private final RegisterService registerService;
+
+    public RegisterController(RegisterService registerService){
+        this.registerService = registerService;
+    }
+
+    @PostMapping("")
+    @ApiOperation(value = "저자-도서 등록", notes = "")
+    public ResponseEntity<HttpResponse> authorAdd(@RequestBody @Valid RegisterDTO registerDTO) {
+        return HttpResponse.toResponseEntity(registerService.register(registerDTO));
+    }
+}
+```
+
+
+
+```java
+@NoArgsConstructor
+@Getter
+public class RegisterDTO {
+
+    private List<@Valid AuthorReqDTO> authors;
+    private @Valid BookReqDTO book;
+
+    @Builder
+    public RegisterDTO(List<AuthorReqDTO> authorReqDTOList, BookReqDTO bookReqDTO){
+        this.authors = authorReqDTOList;
+        this.book = bookReqDTO;
+    }
+
+}
+```
+
+
+
+
+
 ## 공부
 
 elk
